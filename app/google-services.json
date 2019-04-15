@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "808412740502",
+    "firebase_url": "https://projectchat-bf300.firebaseio.com",
+    "project_id": "projectchat-bf300",
+    "storage_bucket": "projectchat-bf300.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:808412740502:android:7df9a830846052ab",
+        "android_client_info": {
+          "package_name": "com.andrious.chatapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "808412740502-cl54899rscpnibttg5r8jg5egdih9ojv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.andrious.chatapp",
+            "certificate_hash": "738cfb10f5b6e56f407a26b07cbf74879b8fb850"
+          }
+        },
+        {
+          "client_id": "808412740502-9c9fpdf40sig9krbth33kea0qck03c21.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBHn2WP99VbYGk5aJ-x26mwW0OCrVO_1ZI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "808412740502-9c9fpdf40sig9krbth33kea0qck03c21.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
