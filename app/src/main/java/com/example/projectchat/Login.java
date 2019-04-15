@@ -80,8 +80,11 @@ public class Login extends AppCompatActivity {
                                     } else if (obj.getJSONObject(user).getString("password").equals(pass)) {
 
                                         UserDetails.username = user;
-                                        UserDetails.showName = obj.getJSONObject(user).getString("showName");
                                         UserDetails.password = pass;
+
+                                        UserDetails.showName = obj.getJSONObject(user).getString("showName");
+
+
 
                                         SharedPreferences pref = getSharedPreferences("Login", MODE_PRIVATE);
                                         SharedPreferences.Editor editor = pref.edit();

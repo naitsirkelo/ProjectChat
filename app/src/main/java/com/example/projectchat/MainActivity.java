@@ -1,14 +1,15 @@
 package com.example.projectchat;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
+import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.view.View;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -16,12 +17,24 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    private static final int REQUEST_CAPTURE_IMAGE = 100;
+    private static final String path = "https://firebasestorage.googleapis.com/v0/b/projectchat-bf300.appspot.com/o";
     TextView unameMain, customname;
+    ImageView avatar;
+    FirebaseStorage storage;
+    StorageReference storageRef;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,13 +64,51 @@ public class MainActivity extends AppCompatActivity
         View headerView = navigationView.getHeaderView(0);
 
 
+        avatar = headerView.findViewById(R.id.avatarImageView);
+        if (UserDetails.avatar != null) {   /* If avatar already exists, load from storage. */
+            avatar = UserDetails.avatar;
+        }
+        /*else {    /* If no avatar exists, try to load from Firebase.
+            Glide.with(MainActivity.this)
+                    .load(UserDetails.avatarUrl)
+                    .into(avatar);
+        }
+        */
 
-        unameMain =  headerView.findViewById(R.id.usernameTextView);
+        unameMain = headerView.findViewById(R.id.usernameTextView);
         customname = headerView.findViewById(R.id.customnameTextView);
 
         unameMain.setText(UserDetails.username);
         customname.setText(UserDetails.showName);
 
+    }
+
+    private void openCameraIntent() {
+        Intent pictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (pictureIntent.resolveActivity(getPackageManager()) != null) {
+            startActivityForResult(pictureIntent, REQUEST_CAPTURE_IMAGE);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_CAPTURE_IMAGE) {
+            if (resultCode == RESULT_OK) {
+                if (data != null && data.getExtras() != null) {
+
+                    Bitmap imageBitmap = (Bitmap) data.getExtras().get("data");
+                    RoundedBitmapDrawable roundedBitmapDrawable = RoundedBitmapDrawableFactory.create(getResources(), imageBitmap);
+
+                    roundedBitmapDrawable.setCornerRadius(100.0f);
+                    roundedBitmapDrawable.setAntiAlias(true);
+                    avatar.setImageDrawable(roundedBitmapDrawable);
+                    UserDetails.avatar = avatar;
+
+
+
+                }
+            }
+        }
     }
 
     @Override
@@ -99,11 +150,7 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
+            openCameraIntent();
         } else if (id == R.id.nav_logout) {
             startActivity(new Intent(MainActivity.this, Login.class));
             finish();
