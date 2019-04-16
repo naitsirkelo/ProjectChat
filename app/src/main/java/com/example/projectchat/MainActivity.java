@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity
             public void onClick(View view) {
                 Intent newTask = new Intent(MainActivity.this, CreateTask.class);
                 startActivityForResult(newTask, REQUEST_NEW_TASK);
-                overridePendingTransition(R.anim.enter_frombot, R.anim.exit_frombot);
+                overridePendingTransition(R.anim.enter_fromtop, R.anim.exit_fromtop);
             }
         });
 

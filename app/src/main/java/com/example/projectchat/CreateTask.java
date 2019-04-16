@@ -36,7 +36,7 @@ public class CreateTask extends AppCompatActivity {
                 Intent toMain = new Intent(CreateTask.this, MainActivity.class);
                 setResult(RESULT_CANCELED, toMain);
                 finish();
-                overridePendingTransition(R.anim.enter_fromtop, R.anim.exit_fromtop);
+                overridePendingTransition(R.anim.enter_frombot, R.anim.exit_frombot);
             }
         });
 
@@ -51,7 +51,7 @@ public class CreateTask extends AppCompatActivity {
 
                 setResult(RESULT_OK, toMain);
                 finish();
-                overridePendingTransition(R.anim.enter_fromtop, R.anim.exit_fromtop);
+                overridePendingTransition(R.anim.enter_frombot, R.anim.exit_frombot);
             }
         });
     }
@@ -59,6 +59,6 @@ public class CreateTask extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        overridePendingTransition(R.anim.enter_fromtop, R.anim.exit_fromtop);
+        overridePendingTransition(R.anim.enter_frombot, R.anim.exit_frombot);
     }
 }
