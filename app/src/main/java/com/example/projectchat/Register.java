@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -32,11 +33,13 @@ public class Register extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        username = findViewById(R.id.username);
-        showName = findViewById(R.id.showName);
-        password = findViewById(R.id.password);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+
+        username = findViewById(R.id.input_username);
+        showName = findViewById(R.id.input_showName);
+        password = findViewById(R.id.input_password);
         registerButton = findViewById(R.id.registerButton);
-        login = findViewById(R.id.login);
+        login = findViewById(R.id.loginButton);
 
         Firebase.setAndroidContext(this);
 

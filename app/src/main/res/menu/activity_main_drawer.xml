@@ -5,9 +5,17 @@
 
     <group android:checkableBehavior="single">
         <item
+            android:id="@+id/nav_users"
+            android:icon="@android:drawable/ic_dialog_email"
+            android:title="Chat" />
+        <item
+            android:id="@+id/nav_shop"
+            android:icon="@drawable/ic_cart"
+            android:title="Shop" />
+        <item
             android:id="@+id/nav_camera"
             android:icon="@drawable/ic_menu_camera"
-            android:title="New avatar" />
+            android:title="New Avatar" />
     </group>
 
     <item android:title="Account">

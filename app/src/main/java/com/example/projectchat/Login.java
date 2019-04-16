@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -17,7 +18,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.firebase.client.Firebase;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -26,16 +26,18 @@ public class Login extends AppCompatActivity {
     TextView registerUser;
     EditText username, password;
     Button loginButton;
-    String user, show, pass;
+    String user, pass;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        registerUser = findViewById(R.id.register);
-        username = findViewById(R.id.username);
-        password = findViewById(R.id.password);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+
+        registerUser = findViewById(R.id.registerButton);
+        username = findViewById(R.id.input_username);
+        password = findViewById(R.id.input_password);
         loginButton = findViewById(R.id.loginButton);
 
         registerUser.setOnClickListener(new View.OnClickListener() {
@@ -50,6 +52,7 @@ public class Login extends AppCompatActivity {
         username.setText(pref.getString("storedUser", ""));
         password.setText(pref.getString("storedPass", ""));
 
+
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -63,7 +66,7 @@ public class Login extends AppCompatActivity {
                 } else {
                     String url = "https://projectchat-bf300.firebaseio.com/users.json";
                     final ProgressDialog pd = new ProgressDialog(Login.this);
-                    pd.setMessage("Loading...");
+                    pd.setMessage("Logging in...");
                     pd.show();
 
                     StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
@@ -84,10 +87,9 @@ public class Login extends AppCompatActivity {
 
                                         UserDetails.showName = obj.getJSONObject(user).getString("showName");
 
-
-
                                         SharedPreferences pref = getSharedPreferences("Login", MODE_PRIVATE);
                                         SharedPreferences.Editor editor = pref.edit();
+
                                         editor.putString("storedUser", UserDetails.username);
                                         editor.putString("storedShow", UserDetails.showName);
                                         editor.putString("storedPass", UserDetails.password);

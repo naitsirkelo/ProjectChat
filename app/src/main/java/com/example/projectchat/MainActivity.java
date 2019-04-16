@@ -2,12 +2,11 @@ package com.example.projectchat;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v4.view.GravityCompat;
@@ -19,6 +18,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.firebase.storage.FirebaseStorage;
@@ -28,12 +28,13 @@ import com.google.firebase.storage.StorageReference;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private static final int REQUEST_CAPTURE_IMAGE = 100;
+    private static final int REQUEST_CAPTURE_IMAGE = 100, REQUEST_NEW_TASK = 1;
     private static final String path = "https://firebasestorage.googleapis.com/v0/b/projectchat-bf300.appspot.com/o";
-    TextView unameMain, customname;
+    TextView unameMain, customname, areaTV, taskTV, tsTV;
     ImageView avatar;
     FirebaseStorage storage;
     StorageReference storageRef;
+    private ListView list;
 
 
     @Override
@@ -47,8 +48,9 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent newTask = new Intent(MainActivity.this, CreateTask.class);
+                startActivityForResult(newTask, REQUEST_NEW_TASK);
+                overridePendingTransition(R.anim.enter_frombot, R.anim.exit_frombot);
             }
         });
 
@@ -81,6 +83,17 @@ public class MainActivity extends AppCompatActivity
         unameMain.setText(UserDetails.username);
         customname.setText(UserDetails.showName);
 
+        areaTV = findViewById(R.id.areaTV);
+        taskTV = findViewById(R.id.taskTV);
+        tsTV = findViewById(R.id.tsTV);
+
+
+    }
+
+    private void addNewTask(String a, String t, String ts) {
+        areaTV.setText(a);
+        taskTV.setText(t);
+        tsTV.setText(ts);
     }
 
     private void openCameraIntent() {
@@ -104,8 +117,16 @@ public class MainActivity extends AppCompatActivity
                     avatar.setImageDrawable(roundedBitmapDrawable);
                     UserDetails.avatar = avatar;
 
+                }
+            }
+        } else if (requestCode == REQUEST_NEW_TASK) {
+            if (resultCode == RESULT_OK) {
+                if (data != null && data.getExtras() != null) {
+                    String area = data.getStringExtra("areaVal");
+                    String task = data.getStringExtra("taskVal");
+                    String timestamp = data.getStringExtra("timestampVal");
 
-
+                    addNewTask(area, task, timestamp);
                 }
             }
         }
@@ -149,11 +170,30 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
+        if (id == R.id.nav_shop) {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    startActivity(new Intent(MainActivity.this, Shop.class));
+                }
+            }, 250);
+        } else if (id == R.id.nav_users) {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    startActivity(new Intent(MainActivity.this, Users.class));
+                }
+            }, 250);
+        } else if (id == R.id.nav_camera) {
             openCameraIntent();
         } else if (id == R.id.nav_logout) {
-            startActivity(new Intent(MainActivity.this, Login.class));
-            finish();
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    startActivity(new Intent(MainActivity.this, Login.class));
+                    finish();
+                }
+            }, 250);
         }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
