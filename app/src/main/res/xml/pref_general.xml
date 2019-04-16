@@ -2,7 +2,7 @@
 
     <EditTextPreference
         android:capitalize="words"
-        android:defaultValue="Username"
+        android:defaultValue="content://settings/system/notification_sound"
         android:inputType="textCapWords"
         android:key="example_text"
         android:maxLines="1"
