@@ -107,6 +107,7 @@ public class Chat extends AppCompatActivity {
         });
     }
 
+    /* Add new message unit to layout. */
     public void addMessageBox(String name, String message, String time, int type) {
 
         TextView textMsg =  new TextView(Chat.this);
@@ -135,7 +136,6 @@ public class Chat extends AppCompatActivity {
             lp3.gravity = Gravity.LEFT;
             textMsg.setBackgroundResource(R.drawable.text_out);
         }
-
 
         textName.setLayoutParams(lp1);
         textMsg.setLayoutParams(lp2);

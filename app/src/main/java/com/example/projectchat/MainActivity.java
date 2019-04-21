@@ -14,38 +14,57 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ListView;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
+import com.firebase.client.ChildEventListener;
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private static final int REQUEST_NEW_TASK = 1, REQUEST_CAPTURE_IMAGE = 2;
-    //private static final String path = "https://firebasestorage.googleapis.com/v0/b/projectchat-bf300.appspot.com/o";
     private static final String
-            path = "gs://projectchat-bf300.appspot.com/",
             urlEnglish = "http://www.nyinorge.no/en/Familiegjenforening/New-in-Norway/Housing/Renting-a-houseapartment/Your-rights-as-a-tenant/",
             urlNorsk = "http://www.nyinorge.no/no/Familiegjenforening/Ny-i-Norge/Bolig/A-leie-bolig/Rettigheter-som-leietaker/";
-    TextView unameMain, customname, areaTV, taskTV, tsTV;
+    TextView unameMain, customname;
     ImageView avatar;
-    private ListView list;
+    LinearLayout layout;
+    ScrollView scrollView;
+    Firebase reference;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        /* Set Firebase reference for uploading tasks. */
+        Firebase.setAndroidContext(this);
+        reference = new Firebase("https://projectchat-bf300.firebaseio.com/rooms/" + UserDetails.roomId + "/tasks");
+
+        /* Customize toolbar on homepage. */
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("Room: " + UserDetails.roomId);
         setSupportActionBar(toolbar);
 
+        /* Button to create new task. */
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -56,6 +75,7 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
+        /* Defining navigation drawer. */
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -68,36 +88,110 @@ public class MainActivity extends AppCompatActivity
         View headerView = navigationView.getHeaderView(0);
 
 
+        /* Importing user profile picture from Firebase. */
         avatar = headerView.findViewById(R.id.avatarImageView);
         if (UserDetails.avatar != null) {   /* If avatar already exists, load from storage. */
             avatar = UserDetails.avatar;
         }
-        else {    /* If no avatar exists, try to load from Firebase.
+        /* else {    If no avatar exists, try to load from Firebase.
             Glide.with(MainActivity.this)
                     .load(UserDetails.avatarUrl)
                     .into(avatar);
-                    */
-        }
 
+        } */
 
+        /* Defining layout views. */
         unameMain = headerView.findViewById(R.id.usernameTextView);
         customname = headerView.findViewById(R.id.customnameTextView);
 
         unameMain.setText(UserDetails.username);
         customname.setText(UserDetails.showName);
 
-        areaTV = findViewById(R.id.areaTV);
-        taskTV = findViewById(R.id.taskTV);
-        tsTV = findViewById(R.id.tsTV);
+        layout = findViewById(R.id.layout1);
+
+        scrollView = findViewById(R.id.scrollView);
+        scrollView.fullScroll(View.FOCUS_DOWN);
+
+
+        reference.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Toast.makeText(MainActivity.this, "Task uploaded", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+    }
+
+    /* Add new task item to the Room view. */
+    private void addNewTask(String task, String area, String timestamp) {
+
+        TextView textArea = new TextView(MainActivity.this);
+        TextView textTask = new TextView(MainActivity.this);
+        TextView textTime = new TextView(MainActivity.this);
+
+        Button completedButton = new Button(MainActivity.this);
+        completedButton.setText("Done");
+
+        textTask.setText(task);
+        textTask.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
+        textArea.setText(area);
+        textArea.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
+        textTime.setText(timestamp);
+        textTime.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
+
+        LinearLayout.LayoutParams lp1 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        LinearLayout.LayoutParams lp2 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        LinearLayout.LayoutParams lp3 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+
+        lp1.gravity = Gravity.START;
+        lp2.gravity = Gravity.CENTER;
+        lp3.gravity = Gravity.RIGHT;
+
+        textTask.setLayoutParams(lp1);
+        textArea.setLayoutParams(lp1);
+        textTime.setLayoutParams(lp2);
+
+        completedButton.setLayoutParams(lp3);
+
+        layout.addView(textTask);
+        layout.addView(textArea);
+        layout.addView(textTime);
+        layout.addView(completedButton);
+
+        scrollView.fullScroll(View.FOCUS_DOWN);
+
+
+        Map<String, String> map = new HashMap<>();
+
+        map.put("user", UserDetails.username);
+        map.put("task", task);
+        map.put("area", area);
+        map.put("time", timestamp);
+
+        reference.push().setValue(map);
 
     }
 
-    private void addNewTask(String a, String t, String ts) {
-        areaTV.setText(a);
-        taskTV.setText(t);
-        tsTV.setText(ts);
-    }
-
+    /* Take new profile picture. */
     private void openCameraIntent() {
         Intent pictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (pictureIntent.resolveActivity(getPackageManager()) != null) {
@@ -107,7 +201,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_CAPTURE_IMAGE) {
+        if (requestCode == REQUEST_CAPTURE_IMAGE) {     /* Receive data from camera and convert to ImageView. */
             if (resultCode == RESULT_OK) {
                 if (data != null && data.getExtras() != null) {
 
@@ -120,17 +214,17 @@ public class MainActivity extends AppCompatActivity
                     UserDetails.avatar = avatar;
 
 
-
                 }
             }
-        } else if (requestCode == REQUEST_NEW_TASK) {
+        } else if (requestCode == REQUEST_NEW_TASK) {   /* Receive data about newly created task. */
             if (resultCode == RESULT_OK) {
                 if (data != null && data.getExtras() != null) {
-                    String area = data.getStringExtra("areaVal");
+
                     String task = data.getStringExtra("taskVal");
+                    String area = data.getStringExtra("areaVal");
                     String timestamp = data.getStringExtra("timestampVal");
 
-                    addNewTask(area, task, timestamp);
+                    addNewTask(task, area, timestamp);
                 }
             }
         }
@@ -153,10 +247,10 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
+        /* Handling navigation view item clicks. */
         int id = item.getItemId();
 
-        if (id == R.id.nav_shop) {
+        if (id == R.id.nav_shop) {              /* Shopping list activity. */
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -164,7 +258,8 @@ public class MainActivity extends AppCompatActivity
                 }
             }, 250);
 
-        } else if (id == R.id.nav_users) {
+
+        } else if (id == R.id.nav_users) {      /* Chat room activity. */
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -172,10 +267,10 @@ public class MainActivity extends AppCompatActivity
                 }
             }, 250);
 
-        } else if (id == R.id.nav_camera) {
+        } else if (id == R.id.nav_camera) {     /* Open camera activity. */
             openCameraIntent();
 
-        } else if (id == R.id.nav_rights) {
+        } else if (id == R.id.nav_rights) {     /* Read rights in WebView. */
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -190,12 +285,13 @@ public class MainActivity extends AppCompatActivity
                             openPage.putExtra("url", urlNorsk);
                             startActivity(openPage);
                             break;
-                        default: break;
+                        default:
+                            break;
                     }
                 }
             }, 250);
 
-        } else if (id == R.id.nav_settings) {
+        } else if (id == R.id.nav_settings) {   /* Open Settings activity. */
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -203,7 +299,7 @@ public class MainActivity extends AppCompatActivity
                 }
             }, 250);
 
-        } else if (id == R.id.nav_logout) {
+        } else if (id == R.id.nav_logout) {     /* Return to Login screen. */
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
