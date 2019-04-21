@@ -9,7 +9,7 @@
 
     <header
         android:fragment="com.example.projectchat.SettingsActivity$LanguagePreferenceFragment"
-        android:icon="@android:drawable/ic_input_get"
+        android:icon="@drawable/ic_sync_black_24dp"
         android:title="@string/pref_header_language" />
 
     <header

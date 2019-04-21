@@ -21,19 +21,20 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
+import com.bumptech.glide.Glide;
 
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private static final int REQUEST_CAPTURE_IMAGE = 100, REQUEST_NEW_TASK = 1;
-    private static final String path = "https://firebasestorage.googleapis.com/v0/b/projectchat-bf300.appspot.com/o";
+    private static final int REQUEST_NEW_TASK = 1, REQUEST_CAPTURE_IMAGE = 2;
+    //private static final String path = "https://firebasestorage.googleapis.com/v0/b/projectchat-bf300.appspot.com/o";
+    private static final String
+            path = "gs://projectchat-bf300.appspot.com/",
+            urlEnglish = "http://www.nyinorge.no/en/Familiegjenforening/New-in-Norway/Housing/Renting-a-houseapartment/Your-rights-as-a-tenant/",
+            urlNorsk = "http://www.nyinorge.no/no/Familiegjenforening/Ny-i-Norge/Bolig/A-leie-bolig/Rettigheter-som-leietaker/";
     TextView unameMain, customname, areaTV, taskTV, tsTV;
     ImageView avatar;
-    FirebaseStorage storage;
-    StorageReference storageRef;
     private ListView list;
 
 
@@ -42,6 +43,7 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.setTitle("Room: " + UserDetails.roomId);
         setSupportActionBar(toolbar);
 
         FloatingActionButton fab = findViewById(R.id.fab);
@@ -70,12 +72,13 @@ public class MainActivity extends AppCompatActivity
         if (UserDetails.avatar != null) {   /* If avatar already exists, load from storage. */
             avatar = UserDetails.avatar;
         }
-        /*else {    /* If no avatar exists, try to load from Firebase.
+        else {    /* If no avatar exists, try to load from Firebase.
             Glide.with(MainActivity.this)
                     .load(UserDetails.avatarUrl)
                     .into(avatar);
+                    */
         }
-        */
+
 
         unameMain = headerView.findViewById(R.id.usernameTextView);
         customname = headerView.findViewById(R.id.customnameTextView);
@@ -86,7 +89,6 @@ public class MainActivity extends AppCompatActivity
         areaTV = findViewById(R.id.areaTV);
         taskTV = findViewById(R.id.taskTV);
         tsTV = findViewById(R.id.tsTV);
-
 
     }
 
@@ -116,6 +118,8 @@ public class MainActivity extends AppCompatActivity
                     roundedBitmapDrawable.setAntiAlias(true);
                     avatar.setImageDrawable(roundedBitmapDrawable);
                     UserDetails.avatar = avatar;
+
+
 
                 }
             }
@@ -159,6 +163,7 @@ public class MainActivity extends AppCompatActivity
                     startActivity(new Intent(MainActivity.this, Shop.class));
                 }
             }, 250);
+
         } else if (id == R.id.nav_users) {
             new Handler().postDelayed(new Runnable() {
                 @Override
@@ -166,8 +171,30 @@ public class MainActivity extends AppCompatActivity
                     startActivity(new Intent(MainActivity.this, Users.class));
                 }
             }, 250);
+
         } else if (id == R.id.nav_camera) {
             openCameraIntent();
+
+        } else if (id == R.id.nav_rights) {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+
+                    Intent openPage = new Intent(MainActivity.this, Webpage.class);
+                    switch (UserDetails.language) {
+                        case 0:
+                            openPage.putExtra("url", urlEnglish);
+                            startActivity(openPage);
+                            break;
+                        case 1:
+                            openPage.putExtra("url", urlNorsk);
+                            startActivity(openPage);
+                            break;
+                        default: break;
+                    }
+                }
+            }, 250);
+
         } else if (id == R.id.nav_settings) {
             new Handler().postDelayed(new Runnable() {
                 @Override
@@ -175,6 +202,7 @@ public class MainActivity extends AppCompatActivity
                     startActivity(new Intent(MainActivity.this, SettingsActivity.class));
                 }
             }, 250);
+
         } else if (id == R.id.nav_logout) {
             new Handler().postDelayed(new Runnable() {
                 @Override

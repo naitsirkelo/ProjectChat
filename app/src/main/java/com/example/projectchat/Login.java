@@ -27,6 +27,7 @@ public class Login extends AppCompatActivity {
     EditText username, password;
     Button loginButton;
     String user, pass;
+    int lang;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +52,7 @@ public class Login extends AppCompatActivity {
 
         username.setText(pref.getString("storedUser", ""));
         password.setText(pref.getString("storedPass", ""));
+        lang = pref.getInt("storedLang", 0);
 
 
         loginButton.setOnClickListener(new View.OnClickListener() {
@@ -84,6 +86,7 @@ public class Login extends AppCompatActivity {
 
                                         UserDetails.username = user;
                                         UserDetails.password = pass;
+                                        UserDetails.language = lang;
 
                                         UserDetails.showName = obj.getJSONObject(user).getString("showName");
 
@@ -95,7 +98,7 @@ public class Login extends AppCompatActivity {
                                         editor.putString("storedPass", UserDetails.password);
                                         editor.apply();
 
-                                        startActivity(new Intent(Login.this, MainActivity.class));
+                                        startActivity(new Intent(Login.this, Room.class));
                                         finish();
                                         overridePendingTransition(R.anim.fadein, R.anim.fadeout);
                                     } else {

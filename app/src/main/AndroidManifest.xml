@@ -16,9 +16,12 @@
         android:label="Co-Living"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".CreateRoom"></activity>
+        <activity android:name=".Room" />
+        <activity android:name=".Webpage" />
         <activity
             android:name=".SettingsActivity"
-            android:label="@string/title_activity_settings"></activity>
+            android:label="@string/title_activity_settings" />
         <activity
             android:name=".CreateTask"
             android:label="@string/title_activity_create_task"

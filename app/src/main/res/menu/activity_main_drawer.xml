@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:showIn="navigation_view">
+    tools:showIn="navigation_view" >
 
     <group android:checkableBehavior="single">
         <item
@@ -17,6 +17,15 @@
             android:icon="@drawable/ic_menu_camera"
             android:title="New Avatar" />
     </group>
+
+    <item android:title="Information">
+        <menu>
+            <item
+                android:id="@+id/nav_rights"
+                android:icon="@drawable/ic_menu_share"
+                android:title="Rights As Tenant" />
+        </menu>
+    </item>
 
     <item android:title="Account">
         <menu>
