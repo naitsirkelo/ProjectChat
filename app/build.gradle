@@ -47,7 +47,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth:16.2.1'
     implementation 'com.google.firebase:firebase-messaging:17.6.0'
     implementation 'com.google.firebase:firebase-core:16.0.8'
-    implementation 'com.firebase:firebase-client-android:2.5.2+'
+    implementation 'com.firebase:firebase-client-android:2.5.2'
 
     implementation 'com.android.volley:volley:1.1.0'
     implementation 'com.github.bumptech.glide:glide:4.8.0'

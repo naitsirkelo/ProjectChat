@@ -2,8 +2,9 @@ package com.example.projectchat;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -35,11 +36,11 @@ public class Users extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user);
 
-        usersList =   findViewById(R.id.usersList);
+        usersList = findViewById(R.id.usersList);
         noUsersText = findViewById(R.id.noUsersText);
 
         pd = new ProgressDialog(Users.this);
-        pd.setMessage("Getting users...");
+        pd.setMessage("Finding users...");
         pd.show();
 
         String url = "https://projectchat-bf300.firebaseio.com/users.json";
@@ -70,30 +71,35 @@ public class Users extends AppCompatActivity {
 
     public void doOnSuccess(String s) {
         try {
+
+            /* Getting 'users'. */
             JSONObject obj = new JSONObject(s);
+            Iterator iterator = obj.keys();
 
-            Iterator i = obj.keys();
-            String key;
+            /* Looping through users. */
+            while (iterator.hasNext()) {
 
-            while(i.hasNext()){
-                key = i.next().toString();
+                String key = iterator.next().toString();
+                JSONObject issue = obj.getJSONObject(key);
 
-                if(!key.equals(UserDetails.username)) {
+                String room = issue.optString("room");
+
+                /* Add to chat list if users have same room ID. */
+                if (!key.equals(UserDetails.username) && room.equals(UserDetails.roomId)) {
                     al.add(key);
-                }
 
+                }
                 totalUsers++;
             }
-
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
-        if(totalUsers <= 1) {
+        /* Setting list visibility. */
+        if (totalUsers <= 1) {
             noUsersText.setVisibility(View.VISIBLE);
             usersList.setVisibility(View.GONE);
-        }
-        else{
+        } else {
             noUsersText.setVisibility(View.GONE);
             usersList.setVisibility(View.VISIBLE);
             usersList.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, al));

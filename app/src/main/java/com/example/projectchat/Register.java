@@ -97,6 +97,7 @@ public class Register extends AppCompatActivity {
                                         reference.child(user).child("showName").setValue(show);
                                         Toast.makeText(Register.this, "Registration successful!", Toast.LENGTH_LONG).show();
                                         Intent i = new Intent(Register.this, Login.class);
+                                        finish();
                                         startActivity(i);
                                     } else {
                                         Toast.makeText(Register.this, "That username is already taken..", Toast.LENGTH_LONG).show();

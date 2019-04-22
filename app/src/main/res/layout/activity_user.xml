@@ -13,7 +13,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="No users found!"
+        android:text="No Other Users In This Room."
         android:id="@+id/noUsersText"
         android:visibility="gone"/>
 
@@ -21,4 +21,5 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/usersList"/>
+
 </LinearLayout>

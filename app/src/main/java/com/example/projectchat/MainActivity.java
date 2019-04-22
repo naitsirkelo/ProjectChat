@@ -1,10 +1,12 @@
 package com.example.projectchat;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
@@ -27,12 +29,19 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.firebase.client.ChildEventListener;
-import com.firebase.client.DataSnapshot;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.firebase.client.Firebase;
-import com.firebase.client.FirebaseError;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 
@@ -42,7 +51,8 @@ public class MainActivity extends AppCompatActivity
     private static final int REQUEST_NEW_TASK = 1, REQUEST_CAPTURE_IMAGE = 2;
     private static final String
             urlEnglish = "http://www.nyinorge.no/en/Familiegjenforening/New-in-Norway/Housing/Renting-a-houseapartment/Your-rights-as-a-tenant/",
-            urlNorsk = "http://www.nyinorge.no/no/Familiegjenforening/Ny-i-Norge/Bolig/A-leie-bolig/Rettigheter-som-leietaker/";
+            urlNorsk = "http://www.nyinorge.no/no/Familiegjenforening/Ny-i-Norge/Bolig/A-leie-bolig/Rettigheter-som-leietaker/",
+            completedText = "Done!";
     TextView unameMain, customname;
     ImageView avatar;
     LinearLayout layout;
@@ -88,6 +98,9 @@ public class MainActivity extends AppCompatActivity
         View headerView = navigationView.getHeaderView(0);
 
 
+        downloadTasks();
+
+
         /* Importing user profile picture from Firebase. */
         avatar = headerView.findViewById(R.id.avatarImageView);
         if (UserDetails.avatar != null) {   /* If avatar already exists, load from storage. */
@@ -97,7 +110,6 @@ public class MainActivity extends AppCompatActivity
             Glide.with(MainActivity.this)
                     .load(UserDetails.avatarUrl)
                     .into(avatar);
-
         } */
 
         /* Defining layout views. */
@@ -112,44 +124,66 @@ public class MainActivity extends AppCompatActivity
         scrollView = findViewById(R.id.scrollView);
         scrollView.fullScroll(View.FOCUS_DOWN);
 
+    }
 
-        reference.addChildEventListener(new ChildEventListener() {
+    /* Download task items from the database. */
+    private void downloadTasks() {
+
+        String url = "https://projectchat-bf300.firebaseio.com/rooms/" + UserDetails.roomId + "/tasks.json";
+        final ProgressDialog pd = new ProgressDialog(MainActivity.this);
+        pd.setMessage("Downloading tasks...");
+        pd.show();
+
+        StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Toast.makeText(MainActivity.this, "Task uploaded", Toast.LENGTH_SHORT).show();
+            public void onResponse(String s) {
+                if (s.equals("null")) {
+                    Toast.makeText(MainActivity.this, "No Tasks To Download.", Toast.LENGTH_LONG).show();
+                } else {
+                    try {
+                        JSONObject json = new JSONObject(s);
+
+                        /* Loop through objects in the tasks.json folder. */
+                        Iterator<?> keys = json.keys();
+                        while (keys.hasNext()) {
+                            String key = (String)keys.next();
+                            JSONObject obj = json.getJSONObject(key);
+
+                            /* Getting data from current object. */
+                            String area = obj.getString("area");
+                            String task = obj.getString("task");
+                            String time = obj.getString("time");
+
+                            addNewTask(area, task, time, true);
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+                pd.dismiss();
             }
-
+        }, new Response.ErrorListener() {
             @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-
+            public void onErrorResponse(VolleyError volleyError) {
+                System.out.println("" + volleyError);
+                pd.dismiss();
             }
         });
+
+        RequestQueue rQueue = Volley.newRequestQueue(MainActivity.this);
+        rQueue.add(request);
     }
 
     /* Add new task item to the Room view. */
-    private void addNewTask(String task, String area, String timestamp) {
+    private void addNewTask(String task, String area, String timestamp, boolean download) {
 
-        TextView textArea = new TextView(MainActivity.this);
-        TextView textTask = new TextView(MainActivity.this);
-        TextView textTime = new TextView(MainActivity.this);
+        final TextView textArea = new TextView(MainActivity.this);
+        final TextView textTask = new TextView(MainActivity.this);
+        final TextView textTime = new TextView(MainActivity.this);
+        final Button completedButton = new Button(MainActivity.this);
 
-        Button completedButton = new Button(MainActivity.this);
-        completedButton.setText("Done");
+        completedButton.setText(completedText);
 
         textTask.setText(task);
         textTask.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
@@ -164,13 +198,22 @@ public class MainActivity extends AppCompatActivity
 
         lp1.gravity = Gravity.START;
         lp2.gravity = Gravity.CENTER;
-        lp3.gravity = Gravity.RIGHT;
+        lp3.gravity = Gravity.END;
 
         textTask.setLayoutParams(lp1);
         textArea.setLayoutParams(lp1);
         textTime.setLayoutParams(lp2);
 
         completedButton.setLayoutParams(lp3);
+        completedButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                layout.removeView(textTask);
+                layout.removeView(textArea);
+                layout.removeView(textTime);
+                layout.removeView(completedButton);
+            }
+        });
 
         layout.addView(textTask);
         layout.addView(textArea);
@@ -179,16 +222,16 @@ public class MainActivity extends AppCompatActivity
 
         scrollView.fullScroll(View.FOCUS_DOWN);
 
+        if (!download) {
+            /* Placing data in map before pushing to Firebase. */
+            Map<String, String> map = new HashMap<>();
+            map.put("user", UserDetails.username);
+            map.put("task", task);
+            map.put("area", area);
+            map.put("time", timestamp);
 
-        Map<String, String> map = new HashMap<>();
-
-        map.put("user", UserDetails.username);
-        map.put("task", task);
-        map.put("area", area);
-        map.put("time", timestamp);
-
-        reference.push().setValue(map);
-
+            reference.push().setValue(map);
+        }
     }
 
     /* Take new profile picture. */
@@ -199,6 +242,7 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    /* Get data from other activities. */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_CAPTURE_IMAGE) {     /* Receive data from camera and convert to ImageView. */
@@ -212,8 +256,6 @@ public class MainActivity extends AppCompatActivity
                     roundedBitmapDrawable.setAntiAlias(true);
                     avatar.setImageDrawable(roundedBitmapDrawable);
                     UserDetails.avatar = avatar;
-
-
                 }
             }
         } else if (requestCode == REQUEST_NEW_TASK) {   /* Receive data about newly created task. */
@@ -224,7 +266,7 @@ public class MainActivity extends AppCompatActivity
                     String area = data.getStringExtra("areaVal");
                     String timestamp = data.getStringExtra("timestampVal");
 
-                    addNewTask(task, area, timestamp);
+                    addNewTask(task, area, timestamp, false);
                 }
             }
         }
@@ -246,7 +288,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         /* Handling navigation view item clicks. */
         int id = item.getItemId();
 

@@ -18,12 +18,15 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.firebase.client.Firebase;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Iterator;
+
 public class Room extends AppCompatActivity {
-    TextView createRoom;
+    TextView createRoom, backToLogin;
     EditText roomId;
     String id;
     Button loginButton;
@@ -36,6 +39,7 @@ public class Room extends AppCompatActivity {
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
         createRoom = findViewById(R.id.createRoom);
+        backToLogin = findViewById(R.id.backButton);
         roomId = findViewById(R.id.input_id);
         loginButton = findViewById(R.id.joinButton);
 
@@ -43,6 +47,15 @@ public class Room extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(Room.this, CreateRoom.class));
+            }
+        });
+
+        backToLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(Room.this, Login.class));
+                finish();
+                overridePendingTransition(R.anim.fadein, R.anim.fadeout);
             }
         });
 
@@ -107,6 +120,28 @@ public class Room extends AppCompatActivity {
                     });
 
                     RequestQueue rQueue = Volley.newRequestQueue(Room.this);
+                    rQueue.add(request);
+
+
+                    url = "https://projectchat-bf300.firebaseio.com/users/" + UserDetails.username + ".json";
+
+                    request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String s) {
+                            Firebase reference = new Firebase("https://projectchat-bf300.firebaseio.com/users/" + UserDetails.username);
+
+                            reference.child("room").setValue(UserDetails.roomId);
+                        }
+
+                    }, new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError volleyError) {
+                            System.out.println("" + volleyError);
+
+                        }
+                    });
+
+                    rQueue = Volley.newRequestQueue(Room.this);
                     rQueue.add(request);
                 }
             }

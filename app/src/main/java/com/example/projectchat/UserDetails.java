@@ -8,7 +8,8 @@ public class UserDetails {
     static String showName = "";
     static String password = "";
     static String chatWith = "";
-    static String roomId = "";
+    static String roomId   = "";
+    static String token    = "";
 
     static int language = 0, admin = 0;
 

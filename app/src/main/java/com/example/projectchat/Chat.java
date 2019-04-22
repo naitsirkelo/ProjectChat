@@ -1,5 +1,8 @@
 package com.example.projectchat;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.TypedValue;
@@ -36,12 +39,12 @@ public class Chat extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
-        sdf = new SimpleDateFormat("EEE, MMM d 'AT' HH:mm a");
+        sdf = new SimpleDateFormat("EEE d MMM HH:mm");
 
-        layout =      findViewById(R.id.layout1);
-        sendButton =  findViewById(R.id.sendButton);
+        layout = findViewById(R.id.layout1);
+        sendButton = findViewById(R.id.sendButton);
         messageArea = findViewById(R.id.messageArea);
-        scrollView =  findViewById(R.id.scrollView);
+        scrollView = findViewById(R.id.scrollView);
         scrollView.fullScroll(View.FOCUS_DOWN);
 
 
@@ -54,14 +57,14 @@ public class Chat extends AppCompatActivity {
             public void onClick(View v) {
                 String messageText = messageArea.getText().toString();
 
-                if(!messageText.equals("")){
+                if (!messageText.equals("")) {
                     Map<String, String> map = new HashMap<>();
                     String timestamp = sdf.format(new Date());
 
                     map.put("message", messageText);
                     map.put("user", UserDetails.username);
                     map.put("time", timestamp);
-                    
+
                     reference1.push().setValue(map);
                     reference2.push().setValue(map);
                     messageArea.setText("");
@@ -73,36 +76,58 @@ public class Chat extends AppCompatActivity {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Map map = dataSnapshot.getValue(Map.class);
-                String message =  map.get("message").toString();
+                String message = map.get("message").toString();
                 String userName = map.get("user").toString();
-                String time =     map.get("time").toString();
+                String time = map.get("time").toString();
 
-                if(userName.equals(UserDetails.username)){
-                    addMessageBox("You ", message, time,1);
-                }
-                else{
-                    addMessageBox(UserDetails.chatWith, message, time,2);
+                if (userName.equals(UserDetails.username)) {
+                    addMessageBox("You ", message, time, 1);
+                } else {
+                    addMessageBox(UserDetails.chatWith, message, time, 2);
                 }
             }
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
             }
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-
             }
 
             @Override
             public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
             }
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
+            }
+        });
 
+        reference2.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Map map = dataSnapshot.getValue(Map.class);
+                String message = map.get("message").toString();
+                String userName = map.get("user").toString();
+
+                messageNotification(userName, message);
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
             }
         });
     }
@@ -110,7 +135,7 @@ public class Chat extends AppCompatActivity {
     /* Add new message unit to layout. */
     public void addMessageBox(String name, String message, String time, int type) {
 
-        TextView textMsg =  new TextView(Chat.this);
+        TextView textMsg = new TextView(Chat.this);
         TextView textName = new TextView(Chat.this);
         TextView textTime = new TextView(Chat.this);
 
@@ -130,7 +155,7 @@ public class Chat extends AppCompatActivity {
             lp2.gravity = Gravity.RIGHT;
             lp3.gravity = Gravity.RIGHT;
             textMsg.setBackgroundResource(R.drawable.text_in);
-        } else{
+        } else {
             lp1.gravity = Gravity.LEFT;
             lp2.gravity = Gravity.LEFT;
             lp3.gravity = Gravity.LEFT;
@@ -145,5 +170,17 @@ public class Chat extends AppCompatActivity {
         layout.addView(textMsg);
         layout.addView(textTime);
         scrollView.fullScroll(View.FOCUS_DOWN);
+    }
+
+    private void messageNotification(String title, String text) {
+
+        NotificationManager nManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
+        Notification notif = new Notification.Builder
+                (getApplicationContext()).setContentTitle(title)
+                .setContentText(text)
+                .setSmallIcon(R.drawable.home_icon).getNotification();
+
+        notif.flags |= Notification.FLAG_AUTO_CANCEL;
+        nManager.notify(0, notif);
     }
 }
