@@ -67,7 +67,6 @@ public class MainActivity extends AppCompatActivity
 
         /* Set Firebase reference for uploading tasks. */
         Firebase.setAndroidContext(this);
-        reference = new Firebase("https://projectchat-bf300.firebaseio.com/rooms/" + UserDetails.roomId + "/tasks");
 
         /* Customize toolbar on homepage. */
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -146,17 +145,20 @@ public class MainActivity extends AppCompatActivity
                         /* Loop through objects in the tasks.json folder. */
                         Iterator<?> keys = json.keys();
                         while (keys.hasNext()) {
-                            String key = (String)keys.next();
+                            String key = (String) keys.next();
                             JSONObject obj = json.getJSONObject(key);
 
-                            /* Getting data from current object. */
-                            String area = obj.getString("area");
-                            String task = obj.getString("task");
-                            String time = obj.getString("time");
+                            String completed = obj.getString("done");
 
-                            addNewTask(area, task, time, true);
+                            /* Getting data from current object, if not already completed. */
+                            if (completed.equals("0")) {
+                                String area = obj.getString("area");
+                                String task = obj.getString("task");
+                                String time = obj.getString("time");
+
+                                addNewTask(area, task, time, true);
+                            }
                         }
-
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -176,7 +178,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     /* Add new task item to the Room view. */
-    private void addNewTask(String task, String area, String timestamp, boolean download) {
+    private void addNewTask(final String task, final String area, final String timestamp, boolean download) {
 
         final TextView textArea = new TextView(MainActivity.this);
         final TextView textTask = new TextView(MainActivity.this);
@@ -212,6 +214,8 @@ public class MainActivity extends AppCompatActivity
                 layout.removeView(textArea);
                 layout.removeView(textTime);
                 layout.removeView(completedButton);
+
+                setTaskCompleted(task, area, timestamp);
             }
         });
 
@@ -229,9 +233,60 @@ public class MainActivity extends AppCompatActivity
             map.put("task", task);
             map.put("area", area);
             map.put("time", timestamp);
+            map.put("done", "0");
 
-            reference.push().setValue(map);
+            String t =  task.replaceAll("[^a-zA-Z0-9]", "");
+            String a =  area.replaceAll("[^a-zA-Z0-9]", "");
+            String ts = timestamp.replaceAll("[^a-zA-Z0-9]", "");
+
+            reference = new Firebase("https://projectchat-bf300.firebaseio.com/rooms/" + UserDetails.roomId + "/tasks");
+            String key = t + "_" + a + "_" + ts;
+            reference.child(key).setValue(map);
         }
+    }
+
+    private void setTaskCompleted(String task, String area, String timestamp) {
+
+        String t =  task.replaceAll("[^a-zA-Z0-9]", "");
+        String a =  area.replaceAll("[^a-zA-Z0-9]", "");
+        String ts = timestamp.replaceAll("[^a-zA-Z0-9]", "");
+
+        reference = new Firebase("https://projectchat-bf300.firebaseio.com/rooms/" + UserDetails.roomId + "/tasks");
+        final String key = t + "_" + a + "_" + ts;
+        reference.child(key).child("done").setValue("1");
+
+        /*
+        String url = "https://projectchat-bf300.firebaseio.com/rooms/" + UserDetails.roomId + "/tasks.json";
+
+        StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String s) {
+                try {
+                    JSONObject json = new JSONObject(s);
+
+                    Iterator<?> keys = json.keys();
+                    while (keys.hasNext()) {
+                        String key = keys.next().toString();
+                        JSONObject obj = json.getJSONObject(key);
+
+                        if (key.equals(taskKey)) {
+                            obj.put("done", "1");
+                        }
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                System.out.println("" + volleyError);
+            }
+        });
+
+        RequestQueue rQueue = Volley.newRequestQueue(MainActivity.this);
+        rQueue.add(request);
+        */
     }
 
     /* Take new profile picture. */
