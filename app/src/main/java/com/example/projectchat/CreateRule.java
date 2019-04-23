@@ -12,29 +12,22 @@ import android.widget.EditText;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class CreateTask extends AppCompatActivity {
+public class CreateRule extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_create_task);
-
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        setContentView(R.layout.activity_create_rule);
 
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
-
-        final EditText task = findViewById(R.id.input_task);
-        final EditText area = findViewById(R.id.input_area);
-        final SimpleDateFormat sdf = new SimpleDateFormat("EEE d MMM HH:mm");
-
+        final EditText rule = findViewById(R.id.input_rule);
 
         FloatingActionButton exit = findViewById(R.id.exit_fab);
         exit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent toMain = new Intent(CreateTask.this, MainActivity.class);
+                Intent toMain = new Intent(CreateRule.this, HouseRules.class);
                 setResult(RESULT_CANCELED, toMain);
                 finish();
                 overridePendingTransition(R.anim.enter_frombot, R.anim.exit_frombot);
@@ -45,10 +38,8 @@ public class CreateTask extends AppCompatActivity {
         create.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent toMain = new Intent(CreateTask.this, MainActivity.class);
-                toMain.putExtra("taskVal", task.getText().toString());
-                toMain.putExtra("areaVal", area.getText().toString());
-                toMain.putExtra("timestampVal", sdf.format(new Date()));
+                Intent toMain = new Intent(CreateRule.this, HouseRules.class);
+                toMain.putExtra("ruleVal", rule.getText().toString());
 
                 setResult(RESULT_OK, toMain);
                 finish();

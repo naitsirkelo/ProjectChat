@@ -3,6 +3,7 @@ package com.example.projectchat;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
@@ -52,18 +53,22 @@ public class MainActivity extends AppCompatActivity
     private static final String
             urlEnglish = "http://www.nyinorge.no/en/Familiegjenforening/New-in-Norway/Housing/Renting-a-houseapartment/Your-rights-as-a-tenant/",
             urlNorsk = "http://www.nyinorge.no/no/Familiegjenforening/Ny-i-Norge/Bolig/A-leie-bolig/Rettigheter-som-leietaker/",
-            completedText = "Done!";
+            completedText = "Done!",
+            removeText = "Remove";
     TextView unameMain, customname;
     ImageView avatar;
     LinearLayout layout;
     ScrollView scrollView;
     Firebase reference;
+    DrawerLayout drawer;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        drawer = findViewById(R.id.drawer_layout);
 
         /* Set Firebase reference for uploading tasks. */
         Firebase.setAndroidContext(this);
@@ -184,8 +189,10 @@ public class MainActivity extends AppCompatActivity
         final TextView textTask = new TextView(MainActivity.this);
         final TextView textTime = new TextView(MainActivity.this);
         final Button completedButton = new Button(MainActivity.this);
+        final Button removeButton = new Button(MainActivity.this);
 
         completedButton.setText(completedText);
+        removeButton.setText(removeText);
 
         textTask.setText(task);
         textTask.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
@@ -207,14 +214,25 @@ public class MainActivity extends AppCompatActivity
         textTime.setLayoutParams(lp2);
 
         completedButton.setLayoutParams(lp3);
+        removeButton.setLayoutParams(lp3);
+
         completedButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                completedButton.setBackgroundColor(Color.GREEN);
+            }
+        });
+
+        removeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 layout.removeView(textTask);
                 layout.removeView(textArea);
                 layout.removeView(textTime);
                 layout.removeView(completedButton);
+                layout.removeView(removeButton);
 
+                /* Remove task from list and set as 'done' in database. */
                 setTaskCompleted(task, area, timestamp);
             }
         });
@@ -223,6 +241,7 @@ public class MainActivity extends AppCompatActivity
         layout.addView(textArea);
         layout.addView(textTime);
         layout.addView(completedButton);
+        layout.addView(removeButton);
 
         scrollView.fullScroll(View.FOCUS_DOWN);
 
@@ -235,58 +254,25 @@ public class MainActivity extends AppCompatActivity
             map.put("time", timestamp);
             map.put("done", "0");
 
-            String t =  task.replaceAll("[^a-zA-Z0-9]", "");
-            String a =  area.replaceAll("[^a-zA-Z0-9]", "");
-            String ts = timestamp.replaceAll("[^a-zA-Z0-9]", "");
-
+            String key = formatKey(task, area, timestamp);
             reference = new Firebase("https://projectchat-bf300.firebaseio.com/rooms/" + UserDetails.roomId + "/tasks");
-            String key = t + "_" + a + "_" + ts;
             reference.child(key).setValue(map);
         }
     }
 
+    /* Set task as completed in database. */
     private void setTaskCompleted(String task, String area, String timestamp) {
-
-        String t =  task.replaceAll("[^a-zA-Z0-9]", "");
-        String a =  area.replaceAll("[^a-zA-Z0-9]", "");
-        String ts = timestamp.replaceAll("[^a-zA-Z0-9]", "");
-
+        String key = formatKey(task, area, timestamp);
         reference = new Firebase("https://projectchat-bf300.firebaseio.com/rooms/" + UserDetails.roomId + "/tasks");
-        final String key = t + "_" + a + "_" + ts;
         reference.child(key).child("done").setValue("1");
+    }
 
-        /*
-        String url = "https://projectchat-bf300.firebaseio.com/rooms/" + UserDetails.roomId + "/tasks.json";
-
-        StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String s) {
-                try {
-                    JSONObject json = new JSONObject(s);
-
-                    Iterator<?> keys = json.keys();
-                    while (keys.hasNext()) {
-                        String key = keys.next().toString();
-                        JSONObject obj = json.getJSONObject(key);
-
-                        if (key.equals(taskKey)) {
-                            obj.put("done", "1");
-                        }
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError volleyError) {
-                System.out.println("" + volleyError);
-            }
-        });
-
-        RequestQueue rQueue = Volley.newRequestQueue(MainActivity.this);
-        rQueue.add(request);
-        */
+    /* Format strings for custom Firebase key ID. */
+    private String formatKey(String task, String area, String timestamp) {
+        String t = task.replaceAll("[^a-zA-Z0-9]", "");
+        String a = area.replaceAll("[^a-zA-Z0-9]", "");
+        String ts = timestamp.replaceAll("[^a-zA-Z0-9]", "");
+        return (t + "_" + a + "_" + ts);
     }
 
     /* Take new profile picture. */
@@ -311,6 +297,8 @@ public class MainActivity extends AppCompatActivity
                     roundedBitmapDrawable.setAntiAlias(true);
                     avatar.setImageDrawable(roundedBitmapDrawable);
                     UserDetails.avatar = avatar;
+
+                    drawer.openDrawer(Gravity.START);
                 }
             }
         } else if (requestCode == REQUEST_NEW_TASK) {   /* Receive data about newly created task. */
@@ -329,7 +317,6 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -366,6 +353,14 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_camera) {     /* Open camera activity. */
             openCameraIntent();
+
+        } else if (id == R.id.nav_rules) {      /* Read or write house rules. */
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    startActivity(new Intent(MainActivity.this, HouseRules.class));
+                }
+            }, 250);
 
         } else if (id == R.id.nav_rights) {     /* Read rights in WebView. */
             new Handler().postDelayed(new Runnable() {

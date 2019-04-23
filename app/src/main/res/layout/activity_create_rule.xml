@@ -4,9 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".CreateTask">
+    tools:context=".CreateRule">
 
-    <include layout="@layout/content_create_task" />
+    <include layout="@layout/content_create_rule" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/exit_fab"

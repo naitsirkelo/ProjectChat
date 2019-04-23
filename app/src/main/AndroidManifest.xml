@@ -18,7 +18,12 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".CreateRoom"></activity>
+        <activity android:name=".CreateRule"></activity>
+        <activity
+            android:name=".HouseRules"
+            android:label="@string/title_activity_house_rules"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".CreateRoom" />
         <activity android:name=".Room" />
         <activity android:name=".Webpage" />
         <activity

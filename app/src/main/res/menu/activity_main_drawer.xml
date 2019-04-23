@@ -13,6 +13,10 @@
             android:icon="@drawable/ic_cart"
             android:title="Shop" />
         <item
+            android:id="@+id/nav_rules"
+            android:icon="@drawable/ic_notepad"
+            android:title="House Rules" />
+        <item
             android:id="@+id/nav_camera"
             android:icon="@drawable/ic_menu_camera"
             android:title="New Avatar" />
