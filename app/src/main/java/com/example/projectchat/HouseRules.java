@@ -1,5 +1,6 @@
 package com.example.projectchat;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -9,10 +10,29 @@ import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+import com.firebase.client.Firebase;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 public class HouseRules extends AppCompatActivity {
 
@@ -22,7 +42,8 @@ public class HouseRules extends AppCompatActivity {
     TextView infoText;
     LinearLayout layoutRules;
     ScrollView scrollViewRules;
-    int totalRules = 0;
+    Firebase reference;
+    int totalRules = 0, keyLength = 15;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +68,8 @@ public class HouseRules extends AppCompatActivity {
         infoText = findViewById(R.id.infoText);
         layoutRules = findViewById(R.id.layoutRules);
         scrollViewRules = findViewById(R.id.scrollViewRules);
+
+        downloadRules();
     }
 
     @Override
@@ -54,13 +77,62 @@ public class HouseRules extends AppCompatActivity {
         if (requestCode == REQUEST_NEW_RULE) {
             if (resultCode == RESULT_OK) {
                 if (data != null && data.getExtras() != null) {
-                    newHouseRule(data.getStringExtra("ruleVal"));
+                    newHouseRule(data.getStringExtra("ruleVal"), false);
                 }
             }
         }
     }
 
-    private void newHouseRule(String rule) {
+    /* Download rule items from the database. */
+    private void downloadRules() {
+
+        String url = "https://projectchat-bf300.firebaseio.com/rooms/" + UserDetails.roomId + "/rules.json";
+        final ProgressDialog pd = new ProgressDialog(HouseRules.this);
+        pd.setMessage("Downloading rules...");
+        pd.show();
+
+        StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String s) {
+                if (s.equals("null")) {
+                    Toast.makeText(HouseRules.this, "No Rules To Download.", Toast.LENGTH_LONG).show();
+                } else {
+                    try {
+                        JSONObject json = new JSONObject(s);
+
+                        /* Loop through objects in the tasks.json folder. */
+                        Iterator<?> keys = json.keys();
+                        while (keys.hasNext()) {
+                            String key = (String) keys.next();
+                            JSONObject obj = json.getJSONObject(key);
+
+                            /* Getting data from current object, if not hidden. */
+                            String hidden = obj.getString("hidden");
+
+                            /* Getting data from current object, if not already completed. */
+                            if (hidden.equals("0")) {
+                                newHouseRule(obj.getString("rule"), true);
+                            }
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+                pd.dismiss();
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                System.out.println("" + volleyError);
+                pd.dismiss();
+            }
+        });
+
+        RequestQueue rQueue = Volley.newRequestQueue(HouseRules.this);
+        rQueue.add(request);
+    }
+
+    private void newHouseRule(final String rule, boolean download) {
 
         final TextView textRule = new TextView(HouseRules.this);
         final Button removeButton = new Button(HouseRules.this);
@@ -88,7 +160,7 @@ public class HouseRules extends AppCompatActivity {
 
                 totalRules--;
                 showInfo(totalRules);
-                //removeRule(textRule);
+                removeRule(rule);
             }
         });
 
@@ -99,6 +171,18 @@ public class HouseRules extends AppCompatActivity {
         showInfo(totalRules);
 
         scrollViewRules.fullScroll(View.FOCUS_DOWN);
+
+        if (!download) {
+            /* Placing data in map before pushing to Firebase. */
+            Map<String, String> map = new HashMap<>();
+            map.put("user", UserDetails.username);
+            map.put("hidden", "0");
+            map.put("rule", rule);
+
+            String key = formatKey(rule);
+            reference = new Firebase("https://projectchat-bf300.firebaseio.com/rooms/" + UserDetails.roomId + "/rules");
+            reference.child(key).setValue(map);
+        }
     }
 
     private void showInfo(int n) {
@@ -107,5 +191,23 @@ public class HouseRules extends AppCompatActivity {
         } else {
             infoText.setVisibility(View.VISIBLE);
         }
+    }
+
+    /* Format strings for custom Firebase key ID. */
+    private String formatKey(String rule) {
+
+        String r = rule.replaceAll(" ", "-");
+        r = r.replaceAll("[^a-zA-Z0-9-]", "");
+        r = r.substring(0, Math.min(r.length(), keyLength));
+
+        return r;
+    }
+
+    /* Accessing database to remove stored rule. */
+    private void removeRule(String rule) {
+
+        String key = formatKey(rule);
+        reference = new Firebase("https://projectchat-bf300.firebaseio.com/rooms/" + UserDetails.roomId + "/rules");
+        reference.child(key).child("hidden").setValue("1");
     }
 }

@@ -148,9 +148,10 @@ public class MainActivity extends AppCompatActivity
                         JSONObject json = new JSONObject(s);
 
                         /* Loop through objects in the tasks.json folder. */
-                        Iterator<?> keys = json.keys();
+                        Iterator keys = json.keys();
+
                         while (keys.hasNext()) {
-                            String key = (String) keys.next();
+                            String key = keys.next().toString();
                             JSONObject obj = json.getJSONObject(key);
 
                             String completed = obj.getString("done");

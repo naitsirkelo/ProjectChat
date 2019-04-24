@@ -71,7 +71,6 @@ public class Users extends AppCompatActivity {
 
     public void doOnSuccess(String s) {
         try {
-
             /* Getting 'users'. */
             JSONObject obj = new JSONObject(s);
             Iterator iterator = obj.keys();
