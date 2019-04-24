@@ -40,6 +40,7 @@ import com.firebase.client.Firebase;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -54,6 +55,7 @@ public class MainActivity extends AppCompatActivity
             urlEnglish = "http://www.nyinorge.no/en/Familiegjenforening/New-in-Norway/Housing/Renting-a-houseapartment/Your-rights-as-a-tenant/",
             urlNorsk = "http://www.nyinorge.no/no/Familiegjenforening/Ny-i-Norge/Bolig/A-leie-bolig/Rettigheter-som-leietaker/",
             completedText = "Done!",
+            notCompletedText = "Done?",
             removeText = "Remove";
     TextView unameMain, customname, infoTextMain;
     ImageView avatar;
@@ -61,7 +63,8 @@ public class MainActivity extends AppCompatActivity
     ScrollView scrollView;
     Firebase reference;
     DrawerLayout drawer;
-    int totalTasks;
+    int totalTasks, boxPaddingTop = 25, boxPaddingBot = 5;
+    boolean event = false;
 
 
     @Override
@@ -76,7 +79,7 @@ public class MainActivity extends AppCompatActivity
 
         /* Customize toolbar on homepage. */
         Toolbar toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle("Room: " + UserDetails.roomId);
+        toolbar.setTitle("Room:   " + UserDetails.roomId);
         setSupportActionBar(toolbar);
 
         /* Button to create new task. */
@@ -106,11 +109,12 @@ public class MainActivity extends AppCompatActivity
         downloadTasks();
 
 
-        /* Importing user profile picture from Firebase. */
+        /* Setting current avatar to UserDetails. */
         avatar = headerView.findViewById(R.id.avatarImageView);
         if (UserDetails.avatar != null) {   /* If avatar already exists, load from storage. */
             avatar = UserDetails.avatar;
         }
+
         /* else {    If no avatar exists, try to load from Firebase.
             Glide.with(MainActivity.this)
                     .load(UserDetails.avatarUrl)
@@ -130,7 +134,12 @@ public class MainActivity extends AppCompatActivity
         scrollView.fullScroll(View.FOCUS_DOWN);
 
         infoTextMain = findViewById(R.id.infoTextMain);
-
+        
+        if (event) {
+            layout.setPadding(0, 0, 0, 88);
+        } else {
+            layout.setPadding(0, 0, 0, 24);
+        }
     }
 
     /* Download task items from the database. */
@@ -157,15 +166,20 @@ public class MainActivity extends AppCompatActivity
                             String key = keys.next().toString();
                             JSONObject obj = json.getJSONObject(key);
 
-                            String completed = obj.getString("done");
+                            String removed = obj.getString("hidden");
 
                             /* Getting data from current object, if not already completed. */
-                            if (completed.equals("0")) {
-                                String area = obj.getString("area");
+                            if (removed.equals("0")) {
                                 String task = obj.getString("task");
+                                String area = obj.getString("area");
                                 String time = obj.getString("time");
 
-                                addNewTask(area, task, time, true);
+                                boolean completed = false;
+
+                                if (obj.getString("completed").equals("1")) {
+                                    completed = true;
+                                }
+                                addNewTask(task, area, time, true, completed);
                             }
                         }
                     } catch (JSONException e) {
@@ -187,65 +201,64 @@ public class MainActivity extends AppCompatActivity
     }
 
     /* Add new task item to the Room view. */
-    private void addNewTask(final String task, final String area, final String timestamp, boolean download) {
+    private void addNewTask(final String task, final String area, final String timestamp, boolean download, boolean done) {
 
-        final TextView textArea = new TextView(MainActivity.this);
-        final TextView textTask = new TextView(MainActivity.this);
-        final TextView textTime = new TextView(MainActivity.this);
+        final TextView textFull = new TextView(MainActivity.this);
         final Button completedButton = new Button(MainActivity.this);
         final Button removeButton = new Button(MainActivity.this);
 
-        completedButton.setText(completedText);
         removeButton.setText(removeText);
 
-        textTask.setText(task);
-        textTask.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
-        textArea.setText(area);
-        textArea.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
-        textTime.setText(timestamp);
-        textTime.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
+        textFull.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
 
         LinearLayout.LayoutParams lp1 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        LinearLayout.LayoutParams lp2 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        LinearLayout.LayoutParams lp3 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        LinearLayout.LayoutParams lp2 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        LinearLayout.LayoutParams lp3 = new LinearLayout.LayoutParams(400, 150);
 
         lp1.gravity = Gravity.START;
         lp2.gravity = Gravity.CENTER;
-        lp3.gravity = Gravity.END;
+        lp3.gravity = Gravity.CENTER;
 
-        textTask.setLayoutParams(lp1);
-        textArea.setLayoutParams(lp1);
-        textTime.setLayoutParams(lp2);
-
-        completedButton.setLayoutParams(lp3);
+        textFull.setLayoutParams(lp1);
+        completedButton.setLayoutParams(lp2);
         removeButton.setLayoutParams(lp3);
+
+        if (done) {
+            completedButton.setBackgroundColor(Color.parseColor("#48F443"));
+            completedButton.setText(completedText);
+        } else {
+            completedButton.setText(notCompletedText);
+        }
 
         completedButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                completedButton.setBackgroundColor(Color.GREEN);
+                completedButton.setBackgroundColor(Color.parseColor("#48F443"));
+                completedButton.setText(completedText);
+                setTaskCompleted(task, area, timestamp);
             }
         });
 
         removeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                layout.removeView(textTask);
-                layout.removeView(textArea);
-                layout.removeView(textTime);
+                layout.removeView(textFull);
                 layout.removeView(completedButton);
                 layout.removeView(removeButton);
 
                 /* Remove task from list and set as 'done' in database. */
                 totalTasks--;
                 showInfo(totalTasks);
-                setTaskCompleted(task, area, timestamp);
+                removeTask(task, area, timestamp);
             }
         });
 
-        layout.addView(textTask);
-        layout.addView(textArea);
-        layout.addView(textTime);
+        /* Adding custom string and buttons to list as a new layout. */
+        String full = task + "   -   " + area + ".\nAdded: " + timestamp;
+        textFull.setText(full);
+        textFull.setPadding(0, boxPaddingTop, 0, boxPaddingBot);
+
+        layout.addView(textFull);
         layout.addView(completedButton);
         layout.addView(removeButton);
 
@@ -261,7 +274,8 @@ public class MainActivity extends AppCompatActivity
             map.put("task", task);
             map.put("area", area);
             map.put("time", timestamp);
-            map.put("done", "0");
+            map.put("hidden", "0");
+            map.put("completed", "0");
 
             String key = formatKey(task, area, timestamp);
             reference = new Firebase("https://projectchat-bf300.firebaseio.com/rooms/" + UserDetails.roomId + "/tasks");
@@ -269,11 +283,18 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    /* Set task as removed in database. */
+    private void removeTask(String task, String area, String timestamp) {
+        String key = formatKey(task, area, timestamp);
+        reference = new Firebase("https://projectchat-bf300.firebaseio.com/rooms/" + UserDetails.roomId + "/tasks");
+        reference.child(key).child("hidden").setValue("1");
+    }
+
     /* Set task as completed in database. */
     private void setTaskCompleted(String task, String area, String timestamp) {
         String key = formatKey(task, area, timestamp);
         reference = new Firebase("https://projectchat-bf300.firebaseio.com/rooms/" + UserDetails.roomId + "/tasks");
-        reference.child(key).child("done").setValue("1");
+        reference.child(key).child("completed").setValue("1");
     }
 
     /* Format strings for custom Firebase key ID. */
@@ -318,7 +339,7 @@ public class MainActivity extends AppCompatActivity
                     String area = data.getStringExtra("areaVal");
                     String timestamp = data.getStringExtra("timestampVal");
 
-                    addNewTask(task, area, timestamp, false);
+                    addNewTask(task, area, timestamp, false, false);
                 }
             }
         }
@@ -351,7 +372,6 @@ public class MainActivity extends AppCompatActivity
                 }
             }, 250);
 
-
         } else if (id == R.id.nav_users) {      /* Chat room activity. */
             new Handler().postDelayed(new Runnable() {
                 @Override
@@ -368,6 +388,14 @@ public class MainActivity extends AppCompatActivity
                 @Override
                 public void run() {
                     startActivity(new Intent(MainActivity.this, HouseRules.class));
+                }
+            }, 250);
+
+        } else if (id == R.id.nav_owner) {      /* Store contact info about landlord. */
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    startActivity(new Intent(MainActivity.this, OwnerInfo.class));
                 }
             }, 250);
 

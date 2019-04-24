@@ -54,7 +54,6 @@ public class Login extends AppCompatActivity {
         password.setText(pref.getString("storedPass", ""));
         lang = pref.getInt("storedLang", 0);
 
-
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

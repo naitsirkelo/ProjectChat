@@ -18,7 +18,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".CreateRule"></activity>
+        <activity android:name=".OwnerInfo"></activity>
+        <activity android:name=".CreateRule" />
         <activity
             android:name=".HouseRules"
             android:label="@string/title_activity_house_rules"

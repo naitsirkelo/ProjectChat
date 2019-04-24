@@ -25,6 +25,10 @@
     <item android:title="Information">
         <menu>
             <item
+                android:id="@+id/nav_owner"
+                android:icon="@drawable/ic_owner"
+                android:title="Landlord Info" />
+            <item
                 android:id="@+id/nav_rights"
                 android:icon="@drawable/ic_menu_share"
                 android:title="Rights As Tenant" />
