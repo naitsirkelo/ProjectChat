@@ -10,7 +10,6 @@ import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -28,8 +27,6 @@ import com.firebase.client.Firebase;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -43,7 +40,7 @@ public class HouseRules extends AppCompatActivity {
     LinearLayout layoutRules;
     ScrollView scrollViewRules;
     Firebase reference;
-    int totalRules = 0, keyLength = 15;
+    int totalRules = 0, keyLength = 20;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -140,18 +137,18 @@ public class HouseRules extends AppCompatActivity {
         removeButton.setText(removeText);
 
         textRule.setText(rule);
-        textRule.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
+        textRule.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
 
         LinearLayout.LayoutParams lp1 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         LinearLayout.LayoutParams lp2 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        LinearLayout.LayoutParams lp3 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
         lp1.gravity = Gravity.START;
         lp2.gravity = Gravity.CENTER;
-        lp3.gravity = Gravity.END;
 
         textRule.setLayoutParams(lp1);
+        removeButton.setLayoutParams(lp2);
 
+        /* Defining behaviour of button to remove rules. */
         removeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -55,12 +55,13 @@ public class MainActivity extends AppCompatActivity
             urlNorsk = "http://www.nyinorge.no/no/Familiegjenforening/Ny-i-Norge/Bolig/A-leie-bolig/Rettigheter-som-leietaker/",
             completedText = "Done!",
             removeText = "Remove";
-    TextView unameMain, customname;
+    TextView unameMain, customname, infoTextMain;
     ImageView avatar;
     LinearLayout layout;
     ScrollView scrollView;
     Firebase reference;
     DrawerLayout drawer;
+    int totalTasks;
 
 
     @Override
@@ -127,6 +128,8 @@ public class MainActivity extends AppCompatActivity
 
         scrollView = findViewById(R.id.scrollView);
         scrollView.fullScroll(View.FOCUS_DOWN);
+
+        infoTextMain = findViewById(R.id.infoTextMain);
 
     }
 
@@ -234,6 +237,8 @@ public class MainActivity extends AppCompatActivity
                 layout.removeView(removeButton);
 
                 /* Remove task from list and set as 'done' in database. */
+                totalTasks--;
+                showInfo(totalTasks);
                 setTaskCompleted(task, area, timestamp);
             }
         });
@@ -243,6 +248,9 @@ public class MainActivity extends AppCompatActivity
         layout.addView(textTime);
         layout.addView(completedButton);
         layout.addView(removeButton);
+
+        totalTasks++;
+        showInfo(totalTasks);
 
         scrollView.fullScroll(View.FOCUS_DOWN);
 
@@ -406,5 +414,13 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void showInfo(int n) {
+        if (n > 0) {
+            infoTextMain.setVisibility(View.GONE);
+        } else {
+            infoTextMain.setVisibility(View.VISIBLE);
+        }
     }
 }

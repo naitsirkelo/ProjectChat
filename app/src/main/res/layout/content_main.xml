@@ -18,6 +18,13 @@
         android:paddingTop="@dimen/activity_vertical_margin"
         android:orientation="vertical">
 
+        <TextView android:id="@+id/infoTextMain"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/text_margin"
+            android:paddingTop="@dimen/text_margin"
+            android:text="@string/content_main_info" />
+
         <ScrollView android:id="@+id/scrollView"
             android:layout_width="match_parent"
             android:layout_weight="20"
