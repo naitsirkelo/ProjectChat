@@ -59,8 +59,10 @@ public class OwnerInfo extends AppCompatActivity {
             }
         });
 
+        /* Download saved info, update fields and set the system language. */
         downloadInfo();
         updateTextFields();
+        setLanguage(UserDetails.language);
     }
 
     private void downloadInfo() {
@@ -81,13 +83,7 @@ public class OwnerInfo extends AppCompatActivity {
 
                         String phone = json.getString("phone");
                         String email = json.getString("email");
-
-                        SharedPreferences pref = getSharedPreferences("Owner", MODE_PRIVATE);
-                        SharedPreferences.Editor editor = pref.edit();
-
-                        editor.putString("storedPhoneOwner", phone);
-                        editor.putString("storedEmailOwner", email);
-                        editor.apply();
+                        savePreference("Owner", "storedPhoneOwner", phone, "storedEmailOwner", email);
 
                         updateTextFields();
 
@@ -111,12 +107,7 @@ public class OwnerInfo extends AppCompatActivity {
 
     /* Update info in SharedPreference and database. */
     private void updateInfo(String phone, String email) {
-        SharedPreferences pref = getSharedPreferences("Owner", MODE_PRIVATE);
-        SharedPreferences.Editor editor = pref.edit();
-
-        editor.putString("storedPhoneOwner", phone);
-        editor.putString("storedEmailOwner", email);
-        editor.apply();
+        savePreference("Owner", "storedPhoneOwner", phone, "storedEmailOwner", email);
 
         /* Placing data in map before pushing to Firebase. */
         Map<String, String> map = new HashMap<>();
@@ -135,5 +126,33 @@ public class OwnerInfo extends AppCompatActivity {
         SharedPreferences pref = getSharedPreferences("Owner", MODE_PRIVATE);
         phoneInput.setText(pref.getString("storedPhoneOwner", ""));
         emailInput.setText(pref.getString("storedEmailOwner", ""));
+    }
+
+    /* Update text boxes based on user settings. */
+    private void setLanguage(String l) {
+        if (l.equals("")) {
+            l = "English";
+        }
+        switch (l) {
+            case "English":
+                saveButton.setText("Save Info");
+                clearButton.setText("New info? Click here to clear");
+                break;
+            case "Norsk":
+                saveButton.setText("Large Info");
+                clearButton.setText("Ny info? Trykk her for å fjerne");
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void savePreference(String p, String into_1, String val_1, String into_2, String val_2) {
+        SharedPreferences pref = getSharedPreferences(p, MODE_PRIVATE);
+        SharedPreferences.Editor editor = pref.edit();
+
+        editor.putString(into_1, val_1);
+        editor.putString(into_2, val_2);
+        editor.apply();
     }
 }

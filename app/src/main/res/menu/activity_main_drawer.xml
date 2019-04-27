@@ -18,8 +18,7 @@
             android:title="House Rules" />
         <item
             android:id="@+id/nav_camera"
-            android:icon="@drawable/ic_menu_camera"
-            android:title="New Avatar" />
+            android:icon="@drawable/ic_menu_camera" />
     </group>
 
     <item android:title="Information">
@@ -38,7 +37,7 @@
     <item android:title="Account">
         <menu>
             <item
-                android:id="@+id/nav_settings"
+                android:id="@+id/nav_preferences"
                 android:icon="@drawable/ic_menu_manage"
                 android:title="Settings" />
             <item

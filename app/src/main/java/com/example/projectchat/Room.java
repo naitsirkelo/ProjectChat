@@ -3,8 +3,8 @@ package com.example.projectchat;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -22,8 +22,6 @@ import com.firebase.client.Firebase;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.Iterator;
 
 public class Room extends AppCompatActivity {
     TextView createRoom, backToLogin;
@@ -60,9 +58,9 @@ public class Room extends AppCompatActivity {
         });
 
         SharedPreferences pref = this.getSharedPreferences("Login", MODE_PRIVATE);
-
         roomId.setText(pref.getString("storedRoom", ""));
 
+        setLanguage(UserDetails.language);
 
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -146,5 +144,26 @@ public class Room extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    /* Update text boxes based on user settings. */
+    private void setLanguage(String l) {
+        if (l.equals("")) {
+            l = "English";
+        }
+        switch (l) {
+            case "English":
+                loginButton.setText(R.string.join_info);
+                backToLogin.setText(R.string.back_login_info);
+                createRoom.setText(R.string.create_room_info);
+                break;
+            case "Norsk":
+                loginButton.setText(R.string.join_info_1);
+                backToLogin.setText(R.string.back_login_info_1);
+                createRoom.setText(R.string.create_room_info_1);
+                break;
+            default:
+                break;
+        }
     }
 }

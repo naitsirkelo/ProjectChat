@@ -10,8 +10,9 @@ public class UserDetails {
     static String chatWith = "";
     static String roomId   = "";
     static String token    = "";
+    static String language = "";
 
-    static int language = 0, admin = 0;
+    static int admin = 0;
 
     static ImageView avatar = null;
     static String avatarUrl = "";

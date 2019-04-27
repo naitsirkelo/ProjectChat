@@ -3,6 +3,7 @@ package com.example.projectchat;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -40,6 +41,8 @@ public class HouseRules extends AppCompatActivity {
     LinearLayout layoutRules;
     ScrollView scrollViewRules;
     Firebase reference;
+    Toolbar toolbar;
+    CollapsingToolbarLayout tbLayout;
     int totalRules = 0, keyLength = 20;
 
     @Override
@@ -47,8 +50,8 @@ public class HouseRules extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_house_rules);
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle("House Rules");
+        toolbar = findViewById(R.id.toolbar);
+        tbLayout = findViewById(R.id.toolbar_layout);
         setSupportActionBar(toolbar);
 
         /* Define button for adding new rule to list. */
@@ -67,6 +70,8 @@ public class HouseRules extends AppCompatActivity {
         scrollViewRules = findViewById(R.id.scrollViewRules);
 
         downloadRules();
+
+        setLanguage(UserDetails.language);
     }
 
     @Override
@@ -206,5 +211,24 @@ public class HouseRules extends AppCompatActivity {
         String key = formatKey(rule);
         reference = new Firebase("https://projectchat-bf300.firebaseio.com/rooms/" + UserDetails.roomId + "/rules");
         reference.child(key).child("hidden").setValue("1");
+    }
+
+    /* Update text boxes based on user settings. */
+    private void setLanguage(String l) {
+        if (l.equals("")) {
+            l = "English";
+        }
+        switch (l) {
+            case "English":
+                tbLayout.setTitle("House Rules");
+                infoText.setText(R.string.house_rules_info);
+                break;
+            case "Norsk":
+                tbLayout.setTitle("Husregler");
+                infoText.setText(R.string.house_rules_info_1);
+                break;
+            default:
+                break;
+        }
     }
 }

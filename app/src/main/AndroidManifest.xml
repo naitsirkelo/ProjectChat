@@ -18,7 +18,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".OwnerInfo"></activity>
+        <activity android:name=".PreferencesCustom"></activity>
+        <activity android:name=".OwnerInfo" />
         <activity android:name=".CreateRule" />
         <activity
             android:name=".HouseRules"
@@ -27,9 +28,6 @@
         <activity android:name=".CreateRoom" />
         <activity android:name=".Room" />
         <activity android:name=".Webpage" />
-        <activity
-            android:name=".SettingsActivity"
-            android:label="@string/title_activity_settings" />
         <activity
             android:name=".CreateTask"
             android:label="@string/title_activity_create_task"

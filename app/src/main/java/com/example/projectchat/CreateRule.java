@@ -4,15 +4,15 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.TextView;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 public class CreateRule extends AppCompatActivity {
+
+    TextView createText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,11 +46,31 @@ public class CreateRule extends AppCompatActivity {
                 overridePendingTransition(R.anim.enter_frombot, R.anim.exit_frombot);
             }
         });
+
+        createText = findViewById(R.id.createInfo);
+        setLanguage(UserDetails.language);
     }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
         overridePendingTransition(R.anim.enter_frombot, R.anim.exit_frombot);
+    }
+
+    /* Update text boxes based on user settings. */
+    private void setLanguage(String l) {
+        if (l.equals("")) {
+            l = "English";
+        }
+        switch (l) {
+            case "English":
+                createText.setText(R.string.define_create_rule_info);
+                break;
+            case "Norsk":
+                createText.setText(R.string.define_create_rule_info_1);
+                break;
+            default:
+                break;
+        }
     }
 }

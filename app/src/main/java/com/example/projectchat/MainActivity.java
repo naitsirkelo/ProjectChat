@@ -3,7 +3,6 @@ package com.example.projectchat;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
@@ -40,7 +39,6 @@ import com.firebase.client.Firebase;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -63,6 +61,8 @@ public class MainActivity extends AppCompatActivity
     ScrollView scrollView;
     Firebase reference;
     DrawerLayout drawer;
+    Toolbar toolbar;
+    Menu menu;
     int totalTasks, boxPaddingTop = 25, boxPaddingBot = 5;
     boolean event = false;
 
@@ -78,8 +78,7 @@ public class MainActivity extends AppCompatActivity
         Firebase.setAndroidContext(this);
 
         /* Customize toolbar on homepage. */
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle("Room:   " + UserDetails.roomId);
+        toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         /* Button to create new task. */
@@ -134,12 +133,27 @@ public class MainActivity extends AppCompatActivity
         scrollView.fullScroll(View.FOCUS_DOWN);
 
         infoTextMain = findViewById(R.id.infoTextMain);
-        
+
+        menu = navigationView.getMenu();
+
+        setLanguage(UserDetails.language);
+
+
+
         if (event) {
             layout.setPadding(0, 0, 0, 88);
         } else {
             layout.setPadding(0, 0, 0, 24);
         }
+
+
+    }
+
+    /* Update language upon returning. */
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        setLanguage(UserDetails.language);
     }
 
     /* Download task items from the database. */
@@ -224,7 +238,7 @@ public class MainActivity extends AppCompatActivity
         removeButton.setLayoutParams(lp3);
 
         if (done) {
-            completedButton.setBackgroundColor(Color.parseColor("#48F443"));
+            completedButton.setBackgroundColor(getResources().getColor(R.color.check_green));
             completedButton.setText(completedText);
         } else {
             completedButton.setText(notCompletedText);
@@ -233,7 +247,7 @@ public class MainActivity extends AppCompatActivity
         completedButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                completedButton.setBackgroundColor(Color.parseColor("#48F443"));
+                completedButton.setBackgroundColor(getResources().getColor(R.color.check_green));
                 completedButton.setText(completedText);
                 setTaskCompleted(task, area, timestamp);
             }
@@ -350,7 +364,7 @@ public class MainActivity extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            moveTaskToBack(true);
         }
     }
 
@@ -406,11 +420,11 @@ public class MainActivity extends AppCompatActivity
 
                     Intent openPage = new Intent(MainActivity.this, Webpage.class);
                     switch (UserDetails.language) {
-                        case 0:
+                        case "English":
                             openPage.putExtra("url", urlEnglish);
                             startActivity(openPage);
                             break;
-                        case 1:
+                        case "Norsk":
                             openPage.putExtra("url", urlNorsk);
                             startActivity(openPage);
                             break;
@@ -420,11 +434,11 @@ public class MainActivity extends AppCompatActivity
                 }
             }, 250);
 
-        } else if (id == R.id.nav_settings) {   /* Open Settings activity. */
+        } else if (id == R.id.nav_preferences) {   /* Open Preferences activity. */
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    startActivity(new Intent(MainActivity.this, SettingsActivity.class));
+                    startActivity(new Intent(MainActivity.this, PreferencesCustom.class));
                 }
             }, 250);
 
@@ -449,6 +463,46 @@ public class MainActivity extends AppCompatActivity
             infoTextMain.setVisibility(View.GONE);
         } else {
             infoTextMain.setVisibility(View.VISIBLE);
+        }
+    }
+
+    /* Update text boxes based on user settings. */
+    private void setLanguage(String l) {
+        drawerLanguage(UserDetails.language, menu.findItem(R.id.nav_shop), "Shop", "Handle Varer");
+        drawerLanguage(UserDetails.language, menu.findItem(R.id.nav_rules), "House Rules", "Husregler");
+        drawerLanguage(UserDetails.language, menu.findItem(R.id.nav_camera), "New Avatar", "Nytt Profilbilde");
+        drawerLanguage(UserDetails.language, menu.findItem(R.id.nav_owner), "Landlord Info", "Huseiers info");
+        drawerLanguage(UserDetails.language, menu.findItem(R.id.nav_rights), "Rights As Tenant", "Leieboers rettigheter");
+        drawerLanguage(UserDetails.language, menu.findItem(R.id.nav_preferences), "Settings", "Innstillinger");
+        drawerLanguage(UserDetails.language, menu.findItem(R.id.nav_logout), "Logout", "Logg ut");
+
+        if (l.equals("")) {
+            l = "English";
+        }
+        switch (l) {
+            case "English":
+                infoTextMain.setText(R.string.content_main_info);
+                toolbar.setTitle("Room: " + UserDetails.roomId);
+                break;
+            case "Norsk":
+                infoTextMain.setText(R.string.content_main_info_1);
+                toolbar.setTitle("Rom: " + UserDetails.roomId);
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void drawerLanguage(String lang, MenuItem item, String eng, String nor) {
+        switch (lang) {
+            case "English":
+                item.setTitle(eng);
+                break;
+            case "Norsk":
+                item.setTitle(nor);
+                break;
+            default:
+                break;
         }
     }
 }

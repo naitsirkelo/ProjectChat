@@ -22,11 +22,10 @@
             android:paddingLeft="24dp"
             android:paddingRight="24dp">
 
-            <TextView
+            <TextView android:id="@+id/createInfo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/text_margin"
-                android:text="@string/define_rule_info" />
+                android:layout_margin="@dimen/text_margin"/>
 
             <!-- Rule -->
             <android.support.design.widget.TextInputLayout

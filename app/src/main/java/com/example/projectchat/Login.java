@@ -27,7 +27,6 @@ public class Login extends AppCompatActivity {
     EditText username, password;
     Button loginButton;
     String user, pass;
-    int lang;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,11 +47,8 @@ public class Login extends AppCompatActivity {
             }
         });
 
-        SharedPreferences pref = this.getSharedPreferences("Login", MODE_PRIVATE);
-
-        username.setText(pref.getString("storedUser", ""));
-        password.setText(pref.getString("storedPass", ""));
-        lang = pref.getInt("storedLang", 0);
+        updateValues();
+        setLanguage(UserDetails.language);
 
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -85,7 +81,6 @@ public class Login extends AppCompatActivity {
 
                                         UserDetails.username = user;
                                         UserDetails.password = pass;
-                                        UserDetails.language = lang;
 
                                         UserDetails.showName = obj.getJSONObject(user).getString("showName");
 
@@ -107,7 +102,6 @@ public class Login extends AppCompatActivity {
                                     e.printStackTrace();
                                 }
                             }
-
                             pd.dismiss();
                         }
                     }, new Response.ErrorListener() {
@@ -123,5 +117,37 @@ public class Login extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void updateValues() {
+        SharedPreferences pref = this.getSharedPreferences("Login", MODE_PRIVATE);
+
+        username.setText(pref.getString("storedUser", ""));
+        password.setText(pref.getString("storedPass", ""));
+
+        pref = getSharedPreferences("Settings", MODE_PRIVATE);
+        SharedPreferences.Editor editor = pref.edit();
+
+        UserDetails.language = pref.getString("storedLanguage", "English");
+        editor.apply();
+    }
+
+    /* Update text boxes based on user settings. */
+    private void setLanguage(String l) {
+        if (l.equals("")) {
+            l = "English";
+        }
+        switch (l) {
+            case "English":
+                registerUser.setText(R.string.register_user_info);
+                loginButton.setText(R.string.login_info);
+                break;
+            case "Norsk":
+                registerUser.setText(R.string.register_user_info_1);
+                loginButton.setText(R.string.login_info_1);
+                break;
+            default:
+                break;
+        }
     }
 }
