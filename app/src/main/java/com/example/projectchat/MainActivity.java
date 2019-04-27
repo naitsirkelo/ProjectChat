@@ -158,22 +158,15 @@ public class MainActivity extends AppCompatActivity
         infoTextMain = findViewById(R.id.infoTextMain);
         menu = navigationView.getMenu();
 
-
         setLanguage(UserDetails.language);
-
-
-        if (event) {
-            layout.setPadding(0, 0, 0, 88);
-        } else {
-            layout.setPadding(0, 0, 0, 24);
-        }
     }
 
-    /* Update language upon returning. */
+    /* Update language and open navigation drawer when returning. */
     @Override
     protected void onRestart() {
         super.onRestart();
         setLanguage(UserDetails.language);
+        drawer.openDrawer(GravityCompat.START);
     }
 
     /* Download task items from the database. */
@@ -418,15 +411,7 @@ public class MainActivity extends AppCompatActivity
         /* Handling navigation view item clicks. */
         int id = item.getItemId();
 
-        if (id == R.id.nav_shop) {              /* Shopping list activity. */
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    startActivity(new Intent(MainActivity.this, Shop.class));
-                }
-            }, 250);
-
-        } else if (id == R.id.nav_users) {      /* Chat room activity. */
+        if (id == R.id.nav_users) {      /* Chat room activity. */
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -434,8 +419,21 @@ public class MainActivity extends AppCompatActivity
                 }
             }, 250);
 
-        } else if (id == R.id.nav_camera) {     /* Open camera activity. */
-            openCameraIntent();
+        } else if (id == R.id.nav_shop) {              /* Shopping list activity. */
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    startActivity(new Intent(MainActivity.this, Shop.class));
+                }
+            }, 250);
+
+        } else if (id == R.id.nav_events) {      /* Events activity. */
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    startActivity(new Intent(MainActivity.this, Events.class));
+                }
+            }, 250);
 
         } else if (id == R.id.nav_rules) {      /* Read or write house rules. */
             new Handler().postDelayed(new Runnable() {
@@ -444,6 +442,9 @@ public class MainActivity extends AppCompatActivity
                     startActivity(new Intent(MainActivity.this, HouseRules.class));
                 }
             }, 250);
+
+        } else if (id == R.id.nav_camera) {     /* Open camera activity. */
+            openCameraIntent();
 
         } else if (id == R.id.nav_owner) {      /* Store contact info about landlord. */
             new Handler().postDelayed(new Runnable() {
@@ -509,6 +510,7 @@ public class MainActivity extends AppCompatActivity
     /* Update text boxes based on user settings. */
     private void setLanguage(String l) {
         drawerLanguage(UserDetails.language, menu.findItem(R.id.nav_shop), "Shop", "Handle Varer");
+        drawerLanguage(UserDetails.language, menu.findItem(R.id.nav_events), "Start Event", "Lag Arrangement");
         drawerLanguage(UserDetails.language, menu.findItem(R.id.nav_rules), "House Rules", "Husregler");
         drawerLanguage(UserDetails.language, menu.findItem(R.id.nav_camera), "New Avatar", "Nytt Profilbilde");
         drawerLanguage(UserDetails.language, menu.findItem(R.id.nav_owner), "Landlord Info", "Huseiers info");

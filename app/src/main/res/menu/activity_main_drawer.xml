@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:showIn="navigation_view" >
+    tools:showIn="navigation_view">
 
     <group android:checkableBehavior="single">
         <item
@@ -13,12 +13,17 @@
             android:icon="@drawable/ic_cart"
             android:title="Shop" />
         <item
+            android:id="@+id/nav_events"
+            android:icon="@drawable/ic_calendar"
+            android:title="Start Event" />
+        <item
             android:id="@+id/nav_rules"
             android:icon="@drawable/ic_notepad"
             android:title="House Rules" />
         <item
             android:id="@+id/nav_camera"
-            android:icon="@drawable/ic_menu_camera" />
+            android:icon="@drawable/ic_menu_camera"
+            android:title="New Avatar" />
     </group>
 
     <item android:title="Information">

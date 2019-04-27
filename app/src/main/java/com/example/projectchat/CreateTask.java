@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 
 public class CreateTask extends AppCompatActivity {
@@ -26,7 +27,7 @@ public class CreateTask extends AppCompatActivity {
 
         final EditText task = findViewById(R.id.input_task);
         final EditText area = findViewById(R.id.input_area);
-        final SimpleDateFormat sdf = new SimpleDateFormat("EEE d MMM HH:mm");
+        final SimpleDateFormat sdf = new SimpleDateFormat("EEE d MMM HH:mm", Locale.getDefault());
 
         FloatingActionButton exit = findViewById(R.id.exit_fab);
         exit.setOnClickListener(new View.OnClickListener() {
