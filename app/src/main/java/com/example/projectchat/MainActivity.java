@@ -3,6 +3,7 @@ package com.example.projectchat;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
@@ -52,8 +53,8 @@ public class MainActivity extends AppCompatActivity
     private static final String
             urlEnglish = "http://www.nyinorge.no/en/Familiegjenforening/New-in-Norway/Housing/Renting-a-houseapartment/Your-rights-as-a-tenant/",
             urlNorsk = "http://www.nyinorge.no/no/Familiegjenforening/Ny-i-Norge/Bolig/A-leie-bolig/Rettigheter-som-leietaker/",
-            completedText = "Done!",
-            notCompletedText = "Done?",
+            notCompletedTextEng = "Done?",
+            notCompletedTextNor = "Gjort?",
             removeText = "Remove";
     TextView unameMain, customname, infoTextMain;
     ImageView avatar;
@@ -79,6 +80,18 @@ public class MainActivity extends AppCompatActivity
 
         /* Customize toolbar on homepage. */
         toolbar = findViewById(R.id.toolbar);
+        String r = "";
+        switch (UserDetails.language) {
+            case "English":
+                r = "Room: ";
+                break;
+            case "Norsk":
+                r = "Rom: ";
+                break;
+            default:
+                break;
+        }
+        toolbar.setTitle(r + UserDetails.roomId);
         setSupportActionBar(toolbar);
 
         /* Button to create new task. */
@@ -100,6 +113,17 @@ public class MainActivity extends AppCompatActivity
         toggle.syncState();
 
         NavigationView navigationView = findViewById(R.id.nav_view);
+
+        switch (UserDetails.mode) {
+            case "nightmode":
+                navigationView.setBackgroundColor(Color.parseColor(UserDetails.nightmode));
+                break;
+            case "daymode":
+                navigationView.setBackgroundColor(Color.parseColor(UserDetails.daymode));
+                break;
+            default:
+                break;
+        }
         navigationView.setNavigationItemSelectedListener(this);
 
         View headerView = navigationView.getHeaderView(0);
@@ -127,17 +151,15 @@ public class MainActivity extends AppCompatActivity
         unameMain.setText(UserDetails.username);
         customname.setText(UserDetails.showName);
 
-        layout = findViewById(R.id.layout1);
-
         scrollView = findViewById(R.id.scrollView);
         scrollView.fullScroll(View.FOCUS_DOWN);
 
+        layout = findViewById(R.id.layout1);
         infoTextMain = findViewById(R.id.infoTextMain);
-
         menu = navigationView.getMenu();
 
-        setLanguage(UserDetails.language);
 
+        setLanguage(UserDetails.language);
 
 
         if (event) {
@@ -145,8 +167,6 @@ public class MainActivity extends AppCompatActivity
         } else {
             layout.setPadding(0, 0, 0, 24);
         }
-
-
     }
 
     /* Update language upon returning. */
@@ -187,13 +207,14 @@ public class MainActivity extends AppCompatActivity
                                 String task = obj.getString("task");
                                 String area = obj.getString("area");
                                 String time = obj.getString("time");
+                                String by = obj.getString("doneBy");
 
                                 boolean completed = false;
 
                                 if (obj.getString("completed").equals("1")) {
                                     completed = true;
                                 }
-                                addNewTask(task, area, time, true, completed);
+                                addNewTask(task, area, time, by, true, completed);
                             }
                         }
                     } catch (JSONException e) {
@@ -215,7 +236,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     /* Add new task item to the Room view. */
-    private void addNewTask(final String task, final String area, final String timestamp, boolean download, boolean done) {
+    private void addNewTask(final String task, final String area, final String timestamp, final String doneBy, boolean download, boolean done) {
 
         final TextView textFull = new TextView(MainActivity.this);
         final Button completedButton = new Button(MainActivity.this);
@@ -239,16 +260,32 @@ public class MainActivity extends AppCompatActivity
 
         if (done) {
             completedButton.setBackgroundColor(getResources().getColor(R.color.check_green));
-            completedButton.setText(completedText);
+            String t = "OK! - " + doneBy;
+            completedButton.setText(t);
+            completedButton.setEnabled(false);
+            completedButton.setTextColor(getResources().getColor(R.color.text_black));
         } else {
-            completedButton.setText(notCompletedText);
+            String t;
+            switch (UserDetails.language) {
+                case "English":
+                    t = notCompletedTextEng;
+                    break;
+                case "Norsk":
+                    t = notCompletedTextNor;
+                    break;
+                default:
+                    t = "";
+                    break;
+            }
+            completedButton.setText(t);
         }
 
         completedButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 completedButton.setBackgroundColor(getResources().getColor(R.color.check_green));
-                completedButton.setText(completedText);
+                String t = "OK! - " + UserDetails.showName;
+                completedButton.setText(t);
                 setTaskCompleted(task, area, timestamp);
             }
         });
@@ -290,6 +327,7 @@ public class MainActivity extends AppCompatActivity
             map.put("time", timestamp);
             map.put("hidden", "0");
             map.put("completed", "0");
+            map.put("doneBy", "0");
 
             String key = formatKey(task, area, timestamp);
             reference = new Firebase("https://projectchat-bf300.firebaseio.com/rooms/" + UserDetails.roomId + "/tasks");
@@ -308,7 +346,9 @@ public class MainActivity extends AppCompatActivity
     private void setTaskCompleted(String task, String area, String timestamp) {
         String key = formatKey(task, area, timestamp);
         reference = new Firebase("https://projectchat-bf300.firebaseio.com/rooms/" + UserDetails.roomId + "/tasks");
-        reference.child(key).child("completed").setValue("1");
+
+        reference.child(key).child("completed").setValue(1);
+        reference.child(key).child("doneBy").setValue(UserDetails.showName);
     }
 
     /* Format strings for custom Firebase key ID. */
@@ -353,7 +393,7 @@ public class MainActivity extends AppCompatActivity
                     String area = data.getStringExtra("areaVal");
                     String timestamp = data.getStringExtra("timestampVal");
 
-                    addNewTask(task, area, timestamp, false, false);
+                    addNewTask(task, area, timestamp, "", false, false);
                 }
             }
         }
@@ -482,11 +522,9 @@ public class MainActivity extends AppCompatActivity
         switch (l) {
             case "English":
                 infoTextMain.setText(R.string.content_main_info);
-                toolbar.setTitle("Room: " + UserDetails.roomId);
                 break;
             case "Norsk":
                 infoTextMain.setText(R.string.content_main_info_1);
-                toolbar.setTitle("Rom: " + UserDetails.roomId);
                 break;
             default:
                 break;
