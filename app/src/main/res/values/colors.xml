@@ -4,4 +4,6 @@
     <color name="colorPrimaryDark">#010FD5</color>
     <color name="colorAccent">#6870D9</color>
     <color name="text_black">#292929</color>
+    <color name="refresh_button">#D5D5D5</color>
+    <color name="grey_fade">#ACACAC</color>
 </resources>

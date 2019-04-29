@@ -64,8 +64,8 @@ public class MainActivity extends AppCompatActivity
     DrawerLayout drawer;
     Toolbar toolbar;
     Menu menu;
+    Button eventBox, refreshButton;
     int totalTasks, boxPaddingTop = 25, boxPaddingBot = 5;
-    boolean event = false;
 
 
     @Override
@@ -80,18 +80,7 @@ public class MainActivity extends AppCompatActivity
 
         /* Customize toolbar on homepage. */
         toolbar = findViewById(R.id.toolbar);
-        String r = "";
-        switch (UserDetails.language) {
-            case "English":
-                r = "Room: ";
-                break;
-            case "Norsk":
-                r = "Rom: ";
-                break;
-            default:
-                break;
-        }
-        toolbar.setTitle(r + UserDetails.roomId);
+        toolbar.setTitle(languageSwitch("Room: ", "Rom: ") + UserDetails.roomId);
         setSupportActionBar(toolbar);
 
         /* Button to create new task. */
@@ -143,6 +132,28 @@ public class MainActivity extends AppCompatActivity
                     .load(UserDetails.avatarUrl)
                     .into(avatar);
         } */
+
+        eventBox = findViewById(R.id.eventBox);
+        eventBoxUI();
+        eventBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, Events.class));
+            }
+        });
+
+        refreshButton = findViewById(R.id.refreshButton);
+        refreshButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                /*
+                String e = "You need something to do, letting the others know!";
+                String n = "Trenger å finne på noe, sender varsel til de andre!";
+                Toast.makeText(MainActivity.this, languageSwitch(e, n), Toast.LENGTH_SHORT).show();
+                */
+                downloadTasks();
+            }
+        });
 
         /* Defining layout views. */
         unameMain = headerView.findViewById(R.id.usernameTextView);
@@ -507,10 +518,15 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    private void eventBoxUI() {
+
+
+    }
+
     /* Update text boxes based on user settings. */
     private void setLanguage(String l) {
         drawerLanguage(UserDetails.language, menu.findItem(R.id.nav_shop), "Shop", "Handle Varer");
-        drawerLanguage(UserDetails.language, menu.findItem(R.id.nav_events), "Start Event", "Lag Arrangement");
+        drawerLanguage(UserDetails.language, menu.findItem(R.id.nav_events), "Events", "Arrangementer");
         drawerLanguage(UserDetails.language, menu.findItem(R.id.nav_rules), "House Rules", "Husregler");
         drawerLanguage(UserDetails.language, menu.findItem(R.id.nav_camera), "New Avatar", "Nytt Profilbilde");
         drawerLanguage(UserDetails.language, menu.findItem(R.id.nav_owner), "Landlord Info", "Huseiers info");
@@ -531,6 +547,22 @@ public class MainActivity extends AppCompatActivity
             default:
                 break;
         }
+    }
+
+    private String languageSwitch(String eng, String nor) {
+        String t;
+        switch (UserDetails.language) {
+            case "English":
+                t = eng;
+                break;
+            case "Norsk":
+                t = nor;
+                break;
+            default:
+                t = "";
+                break;
+        }
+        return t;
     }
 
     private void drawerLanguage(String lang, MenuItem item, String eng, String nor) {

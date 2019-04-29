@@ -61,7 +61,6 @@ public class HouseRules extends AppCompatActivity {
             public void onClick(View view) {
                 Intent newTask = new Intent(HouseRules.this, CreateRule.class);
                 startActivityForResult(newTask, REQUEST_NEW_RULE);
-                overridePendingTransition(R.anim.enter_fromtop, R.anim.exit_fromtop);
             }
         });
 

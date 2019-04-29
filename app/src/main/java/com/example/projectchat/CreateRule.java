@@ -27,10 +27,9 @@ public class CreateRule extends AppCompatActivity {
         exit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent toMain = new Intent(CreateRule.this, HouseRules.class);
-                setResult(RESULT_CANCELED, toMain);
+                Intent back = new Intent(CreateRule.this, HouseRules.class);
+                setResult(RESULT_CANCELED, back);
                 finish();
-                overridePendingTransition(R.anim.enter_frombot, R.anim.exit_frombot);
             }
         });
 
@@ -43,7 +42,6 @@ public class CreateRule extends AppCompatActivity {
 
                 setResult(RESULT_OK, toMain);
                 finish();
-                overridePendingTransition(R.anim.enter_frombot, R.anim.exit_frombot);
             }
         });
 
@@ -54,7 +52,6 @@ public class CreateRule extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        overridePendingTransition(R.anim.enter_frombot, R.anim.exit_frombot);
     }
 
     /* Update text boxes based on user settings. */

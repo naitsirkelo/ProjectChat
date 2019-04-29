@@ -4,21 +4,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".PreferencesCustom">
+    tools:context=".CreateEvent">
 
-    <include layout="@layout/content_preferences" />
+    <include layout="@layout/content_create_event" />
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/backButtonPref"
+        android:id="@+id/exit_fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|start"
         android:layout_margin="@dimen/fab_margin"
         app:backgroundTint="@color/colorPrimary"
-        app:srcCompat="@android:drawable/ic_menu_revert" />
+        app:srcCompat="@android:drawable/ic_delete" />
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/saveButtonPref"
+        android:id="@+id/create_fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"

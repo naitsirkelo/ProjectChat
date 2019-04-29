@@ -54,6 +54,8 @@
     <!-- Events -->
     <string name="content_events_info">Book a room or area of the house for an event or gathering here.</string>
     <string name="content_events_info_1">Her kan du reservere et rom eller område i huset til et arrangmenet.</string>
+    <string name="define_create_event_info">Choose the type, where, what date and when the event will start.</string>
+    <string name="define_create_event_info_1">Velg typen, hvor, hvilken dato og når arrangementet skal være.</string>
 
     <!-- Shop -->
     <string name="content_shop_info">Click the + sign to add a new list of items you need to buy!</string>

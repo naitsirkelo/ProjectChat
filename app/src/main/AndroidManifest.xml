@@ -18,10 +18,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
+        <activity android:name=".CreateEvent"></activity>
         <activity
             android:name=".Events"
             android:label="@string/title_activity_events"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".PreferencesCustom" />
         <activity android:name=".OwnerInfo" />
         <activity android:name=".CreateRule" />
