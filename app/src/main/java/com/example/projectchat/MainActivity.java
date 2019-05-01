@@ -2,7 +2,9 @@ package com.example.projectchat;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
@@ -16,6 +18,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Base64;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.Menu;
@@ -41,6 +44,7 @@ import com.firebase.client.Firebase;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -99,20 +103,16 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
         View headerView = navigationView.getHeaderView(0);
 
-
         /* Update task UI. */
         downloadTasks();
 
-
-        /* Setting current avatar to UserDetails. */
+        /* Setting current avatar to saved picture. */
         avatar = headerView.findViewById(R.id.avatarImageView);
-        if (UserDetails.avatar != null) {   /* If avatar already exists, load from storage. */
-            avatar = UserDetails.avatar;
-        }
+        updateAvatar();
 
+        /* Define popup and decide if it will show or not. */
         eventBox = findViewById(R.id.eventBox);
         eventBoxUI();
-
         eventBox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -132,14 +132,14 @@ public class MainActivity extends AppCompatActivity
         layout = findViewById(R.id.layout1);
         menu = navigationView.getMenu();
 
-        setLanguage(UserDetails.language);
+        setLanguage();
     }
 
     /* Update language and open navigation drawer when returning. */
     @Override
     protected void onRestart() {
         super.onRestart();
-        setLanguage(UserDetails.language);
+        setLanguage();
         eventBoxUI();
         drawer.openDrawer(GravityCompat.START);
     }
@@ -343,6 +343,21 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    private void updateAvatar() {
+        SharedPreferences pref = this.getSharedPreferences("Login", MODE_PRIVATE);
+        String previouslyEncodedImage = pref.getString("imageData", "");
+
+        if(!previouslyEncodedImage.equals("") ){
+            byte[] b = Base64.decode(previouslyEncodedImage, Base64.DEFAULT);
+            Bitmap bitmap = BitmapFactory.decodeByteArray(b, 0, b.length);
+
+            RoundedBitmapDrawable roundedBitmapDrawable = RoundedBitmapDrawableFactory.create(getResources(), bitmap);
+            roundedBitmapDrawable.setCornerRadius(100.0f);
+            roundedBitmapDrawable.setAntiAlias(true);
+            avatar.setImageDrawable(roundedBitmapDrawable);
+        }
+    }
+
     /* Get data from other activities. */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -352,11 +367,17 @@ public class MainActivity extends AppCompatActivity
                 /* Converting bitmap from camera to an ImageView. */
                 Bitmap imageBitmap = (Bitmap) data.getExtras().get("data");
                 RoundedBitmapDrawable roundedBitmapDrawable = RoundedBitmapDrawableFactory.create(getResources(), imageBitmap);
-
                 roundedBitmapDrawable.setCornerRadius(100.0f);
                 roundedBitmapDrawable.setAntiAlias(true);
                 avatar.setImageDrawable(roundedBitmapDrawable);
-                UserDetails.avatar = avatar;
+
+                /* Converting bitmap to Base64 before storing in Shared Pref. */
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                byte[] b = baos.toByteArray();
+
+                String encodedImage = Base64.encodeToString(b, Base64.DEFAULT);
+                Utility.savePreference_1(MainActivity.this, "Login", "imageData", encodedImage);
 
                 drawer.openDrawer(Gravity.START);
             }
@@ -513,7 +534,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     /* Update text boxes based on user settings. */
-    private void setLanguage(String l) {
+    private void setLanguage() {
         drawerLanguage(UserDetails.language, menu.findItem(R.id.nav_shop), "Shop", "Handle Varer");
         drawerLanguage(UserDetails.language, menu.findItem(R.id.nav_events), "Events", "Arrangementer");
         drawerLanguage(UserDetails.language, menu.findItem(R.id.nav_rules), "House Rules", "Husregler");
@@ -523,19 +544,7 @@ public class MainActivity extends AppCompatActivity
         drawerLanguage(UserDetails.language, menu.findItem(R.id.nav_preferences), "Settings", "Innstillinger");
         drawerLanguage(UserDetails.language, menu.findItem(R.id.nav_logout), "Logout", "Logg ut");
 
-        if (l.equals("")) {
-            l = "English";
-        }
-        switch (l) {
-            case "English":
-                infoTextMain.setText(R.string.content_main_info);
-                break;
-            case "Norsk":
-                infoTextMain.setText(R.string.content_main_info_1);
-                break;
-            default:
-                break;
-        }
+        infoTextMain.setText(Utility.languageSwitch(getString(R.string.content_main_info), getString(R.string.content_main_info_1)));
     }
 
     private void drawerLanguage(String lang, MenuItem item, String eng, String nor) {

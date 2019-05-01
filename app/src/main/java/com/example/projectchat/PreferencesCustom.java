@@ -15,6 +15,7 @@ public class PreferencesCustom extends AppCompatActivity {
 
     Spinner langSpinner;
     String[] languages;
+    TextView preferenceText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,9 +24,6 @@ public class PreferencesCustom extends AppCompatActivity {
 
         /* Preventing keyboard from distorting layout. */
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
-
-        /* Set language based on Userdetails. */
-        setLanguage(UserDetails.language);
 
         /* Define spinner with values from XML. */
         langSpinner = findViewById(R.id.languageSpinner);
@@ -61,19 +59,9 @@ public class PreferencesCustom extends AppCompatActivity {
                 finish();
             }
         });
-    }
 
-    private void setLanguage(String l) {
-        TextView preferenceText = findViewById(R.id.preferenceInfo);
-        switch (l) {
-            case "English":
-                preferenceText.setText(R.string.content_pref_info);
-                break;
-            case "Norsk":
-                preferenceText.setText(R.string.content_pref_info_1);
-                break;
-            default:
-                break;
-        }
+        /* Set language based on Userdetails. */
+        findViewById(R.id.preferenceInfo);
+        preferenceText.setText(Utility.languageSwitch(getString(R.string.content_pref_info), getString(R.string.content_pref_info_1)));
     }
 }

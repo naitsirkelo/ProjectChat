@@ -50,16 +50,7 @@ public class Events extends AppCompatActivity {
 
         /* Define toolbar settings. */
         toolbar = findViewById(R.id.toolbar);
-        switch (UserDetails.language) {
-            case "English":
-                toolbar.setTitle("Events");
-                break;
-            case "Norsk":
-                toolbar.setTitle("Arrangement");
-                break;
-            default:
-                break;
-        }
+        toolbar.setTitle(Utility.languageSwitch("Events", "Arrangement"));
         setSupportActionBar(toolbar);
 
         eventText = findViewById(R.id.eventInfo);
@@ -75,21 +66,13 @@ public class Events extends AppCompatActivity {
                 if (UserDetails.event == 0) {
                     startActivityForResult(new Intent(Events.this, CreateEvent.class), REQUEST_NEW_EVENT);
                 } else {
-                    Toast.makeText(Events.this, "You already have an event.", Toast.LENGTH_SHORT).show();
+                    String t = Utility.languageSwitch("You already have an event.", "Du har alt et arrangement.");
+                    Toast.makeText(Events.this, t, Toast.LENGTH_SHORT).show();
                 }
             }
         });
 
-        switch (UserDetails.language) {
-            case "English":
-                eventText.setText(R.string.content_events_info);
-                break;
-            case "Norsk":
-                eventText.setText(R.string.content_events_info_1);
-                break;
-            default:
-                break;
-        }
+        eventText.setText(Utility.languageSwitch(getString(R.string.content_events_info), getString(R.string.content_events_info_1)));
     }
 
     @Override
@@ -111,7 +94,8 @@ public class Events extends AppCompatActivity {
     private void downloadEvents() {
         String url = "https://projectchat-bf300.firebaseio.com/rooms/" + UserDetails.roomId + "/events.json";
         final ProgressDialog pd = new ProgressDialog(Events.this);
-        pd.setMessage("Downloading events...");
+        String t = Utility.languageSwitch("Downloading events...", "Laster ned arrangementer...");
+        pd.setMessage(t);
         pd.show();
 
         StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
@@ -209,7 +193,7 @@ public class Events extends AppCompatActivity {
         textFull.setLayoutParams(lp1);
         removeButton.setLayoutParams(lp2);
 
-        /* Adding custom string and buttons to list as a new layout. */
+        /* Adding custom string and button to list as a new layout. */
         final String full = type + " ,  " + where + "  -  " + user + ".\n" + time + " - " + date;
         textFull.setText(full);
         layoutEvents.addView(textFull);
@@ -225,7 +209,7 @@ public class Events extends AppCompatActivity {
                     hideEvent(formatKey(type, time));
                 }
             });
-            removeButton.setText(Utility.languageSwitch("Remove Own Event", "Slett Eget Arngm."));
+            removeButton.setText(Utility.languageSwitch("Remove Own Event", "Slett Eget Arr."));
             layoutEvents.addView(removeButton);
 
             UserDetails.event = 1;
