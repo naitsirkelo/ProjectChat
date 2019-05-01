@@ -1,4 +1,4 @@
-#Wed May 01 22:00:15 CEST 2019
+#Wed May 01 22:11:05 CEST 2019
 base.0=/home/shift/AndroidStudioProjects/ProjectChat/app/build/intermediates/transforms/dexMerger/debug/7
 path.0=classes.dex
 renamed.0=classes.dex

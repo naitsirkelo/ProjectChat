@@ -22,6 +22,7 @@ The list below will explain how the data is structured in Firebase. No data will
 
 - rooms:
     - id: Minimum 6 letters/numbers
+        - events
         - owner (Email + phone)
         - rules (Created house rules, by users)
             - rule (id), user (who submitted), hidden (0/1)

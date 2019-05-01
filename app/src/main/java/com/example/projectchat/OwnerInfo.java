@@ -67,6 +67,8 @@ public class OwnerInfo extends AppCompatActivity {
 
     private void downloadInfo() {
 
+
+
         String url = "https://projectchat-bf300.firebaseio.com/rooms/" + UserDetails.roomId + "/owner.json";
         final ProgressDialog pd = new ProgressDialog(OwnerInfo.this);
         pd.setMessage("Downloading info...");
@@ -83,7 +85,7 @@ public class OwnerInfo extends AppCompatActivity {
 
                         String phone = json.getString("phone");
                         String email = json.getString("email");
-                        savePreference("Owner", "storedPhoneOwner", phone, "storedEmailOwner", email);
+                        Utility.savePreference_2(OwnerInfo.this, "Owner", "storedPhoneOwner", phone, "storedEmailOwner", email);
 
                         updateTextFields();
 
@@ -107,7 +109,7 @@ public class OwnerInfo extends AppCompatActivity {
 
     /* Update info in SharedPreference and database. */
     private void updateInfo(String phone, String email) {
-        savePreference("Owner", "storedPhoneOwner", phone, "storedEmailOwner", email);
+        Utility.savePreference_2(OwnerInfo.this, "Owner", "storedPhoneOwner", phone, "storedEmailOwner", email);
 
         /* Placing data in map before pushing to Firebase. */
         Map<String, String> map = new HashMap<>();
@@ -136,23 +138,16 @@ public class OwnerInfo extends AppCompatActivity {
         switch (l) {
             case "English":
                 saveButton.setText("Save Info");
-                clearButton.setText("New info? Click here to clear");
+                clearButton.setText(R.string.owner_clear_text);
                 break;
             case "Norsk":
                 saveButton.setText("Large Info");
-                clearButton.setText("Ny info? Trykk her for å fjerne");
+                clearButton.setText(R.string.owner_clear_text_1);
                 break;
             default:
                 break;
         }
     }
 
-    private void savePreference(String p, String into_1, String val_1, String into_2, String val_2) {
-        SharedPreferences pref = getSharedPreferences(p, MODE_PRIVATE);
-        SharedPreferences.Editor editor = pref.edit();
 
-        editor.putString(into_1, val_1);
-        editor.putString(into_2, val_2);
-        editor.apply();
-    }
 }

@@ -59,6 +59,8 @@ public class CreateRoom extends AppCompatActivity {
                     roomId.setError("No special characters allowed.");
                 } else if (id.length() < 5) {
                     roomId.setError("At least 6 letters/numbers required.");
+                } else if (id.length() > 16) {
+                    roomId.setError("Max. 16 letters/numbers allowed.");
                 } else {
                     final ProgressDialog pd = new ProgressDialog(CreateRoom.this);
                     pd.setMessage("Storing room...");
@@ -80,7 +82,7 @@ public class CreateRoom extends AppCompatActivity {
 
                                     if (!obj.has(id)) {
                                         reference.child(id).child("id").setValue(id);
-                                        Toast.makeText(CreateRoom.this, "Creation successful!", Toast.LENGTH_LONG).show();
+                                        Toast.makeText(CreateRoom.this, "Created successfully.", Toast.LENGTH_LONG).show();
                                         Intent i = new Intent(CreateRoom.this, Room.class);
                                         startActivity(i);
                                     } else {

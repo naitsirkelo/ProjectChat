@@ -35,7 +35,6 @@ import java.util.Map;
 public class HouseRules extends AppCompatActivity {
 
     private static final int REQUEST_NEW_RULE = 1;
-    private static final String removeText = "Delete";
 
     TextView infoText;
     LinearLayout layoutRules;
@@ -68,6 +67,7 @@ public class HouseRules extends AppCompatActivity {
         layoutRules = findViewById(R.id.layoutRules);
         scrollViewRules = findViewById(R.id.scrollViewRules);
 
+        /* Update UI with rules from Firebase. */
         downloadRules();
 
         setLanguage(UserDetails.language);
@@ -75,11 +75,9 @@ public class HouseRules extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_NEW_RULE) {
-            if (resultCode == RESULT_OK) {
-                if (data != null && data.getExtras() != null) {
-                    newHouseRule(data.getStringExtra("ruleVal"), false);
-                }
+        if (requestCode == REQUEST_NEW_RULE && resultCode == RESULT_OK) {
+            if (data != null && data.getExtras() != null) {
+                newHouseRule(data.getStringExtra("ruleVal"), false);
             }
         }
     }
@@ -138,8 +136,6 @@ public class HouseRules extends AppCompatActivity {
         final TextView textRule = new TextView(HouseRules.this);
         final Button removeButton = new Button(HouseRules.this);
 
-        removeButton.setText(removeText);
-
         textRule.setText(rule);
         textRule.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
 
@@ -153,6 +149,7 @@ public class HouseRules extends AppCompatActivity {
         removeButton.setLayoutParams(lp2);
 
         /* Defining behaviour of button to remove rules. */
+        removeButton.setText(Utility.languageSwitch(Utility.removeTextEng, Utility.removeTextNor));
         removeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -206,7 +203,6 @@ public class HouseRules extends AppCompatActivity {
 
     /* Accessing database to remove stored rule. */
     private void removeRule(String rule) {
-
         String key = formatKey(rule);
         reference = new Firebase("https://projectchat-bf300.firebaseio.com/rooms/" + UserDetails.roomId + "/rules");
         reference.child(key).child("hidden").setValue("1");

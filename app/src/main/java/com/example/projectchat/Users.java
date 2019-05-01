@@ -3,7 +3,6 @@ package com.example.projectchat;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
@@ -28,7 +27,6 @@ public class Users extends AppCompatActivity {
     ListView usersList;
     TextView noUsersText;
     ArrayList<String> al = new ArrayList<>();
-    int totalUsers = 0;
     ProgressDialog pd;
 
     @Override
@@ -36,8 +34,16 @@ public class Users extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user);
 
-        usersList = findViewById(R.id.usersList);
         noUsersText = findViewById(R.id.noUsersText);
+
+        usersList = findViewById(R.id.usersList);
+        usersList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                UserDetails.chatWith = al.get(position);
+                startActivity(new Intent(Users.this, Chat.class));
+            }
+        });
 
         pd = new ProgressDialog(Users.this);
         pd.setMessage("Finding users...");
@@ -59,51 +65,43 @@ public class Users extends AppCompatActivity {
 
         RequestQueue rQueue = Volley.newRequestQueue(Users.this);
         rQueue.add(request);
-
-        usersList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                UserDetails.chatWith = al.get(position);
-                startActivity(new Intent(Users.this, Chat.class));
-            }
-        });
     }
 
     public void doOnSuccess(String s) {
         try {
             /* Getting 'users'. */
-            JSONObject obj = new JSONObject(s);
-            Iterator iterator = obj.keys();
+            JSONObject json = new JSONObject(s);
+            Iterator<?> iterator = json.keys();
 
             /* Looping through users. */
             while (iterator.hasNext()) {
 
-                String key = iterator.next().toString();
-                JSONObject issue = obj.getJSONObject(key);
+                String key = (String) iterator.next();
+                JSONObject obj = json.getJSONObject(key);
 
-                String room = issue.optString("room");
+                String room = obj.getString("room");
 
                 /* Add to chat list if users have same room ID. */
                 if (!key.equals(UserDetails.username) && room.equals(UserDetails.roomId)) {
                     al.add(key);
-
                 }
-                totalUsers++;
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
-        /* Setting list visibility. */
-        if (totalUsers <= 1) {
-            noUsersText.setVisibility(View.VISIBLE);
-            usersList.setVisibility(View.GONE);
-        } else {
-            noUsersText.setVisibility(View.GONE);
-            usersList.setVisibility(View.VISIBLE);
-            usersList.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, al));
-        }
+        showUI();
+        usersList.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, al));
 
         pd.dismiss();
+    }
+
+    /* Setting list and info visibility. */
+    private void showUI() {
+        if (al.size() < 2) {
+            noUsersText.setText(Utility.languageSwitch(getString(R.string.no_chat_info), getString(R.string.no_chat_info_1)));
+        } else {
+            noUsersText.setText(Utility.languageSwitch(getString(R.string.chat_info), getString(R.string.chat_info_1)));
+        }
     }
 }

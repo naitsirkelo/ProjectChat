@@ -1077,6 +1077,7 @@ drawable home_icon
 drawable ic_calendar
 drawable ic_cart
 drawable ic_checkmark
+drawable ic_eventbox
 drawable ic_info_black_24dp
 drawable ic_launcher_background
 drawable ic_launcher_foreground
@@ -1094,6 +1095,7 @@ drawable ic_notifications_black_24dp
 drawable ic_owner
 drawable ic_plus
 drawable ic_refresh
+drawable ic_refresh2
 drawable ic_save
 drawable ic_sync_black_24dp
 drawable icon1
@@ -1143,6 +1145,7 @@ id action_menu_presenter
 id action_mode_bar
 id action_mode_bar_stub
 id action_mode_close_button
+id action_refresh
 id action_settings
 id action_text
 id actions
@@ -1308,10 +1311,8 @@ id progress_horizontal
 id radio
 id radio_common
 id radio_private
-id refreshButton
 id registerButton
 id relative
-id removeEvent
 id right
 id right_icon
 id right_side
@@ -1325,6 +1326,7 @@ id scroll
 id scrollIndicatorDown
 id scrollIndicatorUp
 id scrollView
+id scrollViewEvents
 id scrollViewRules
 id scrollViewShop
 id scrollable
@@ -1575,6 +1577,8 @@ string btn_bored_eng
 string btn_bored_nor
 string character_counter_content_description
 string character_counter_pattern
+string chat_info
+string chat_info_1
 string common_google_play_services_enable_button
 string common_google_play_services_enable_text
 string common_google_play_services_enable_title
@@ -1609,8 +1613,15 @@ string define_create_event_info
 string define_create_event_info_1
 string define_create_rule_info
 string define_create_rule_info_1
+string define_refresh
+string define_refresh_1
 string define_task_info
 string define_task_info_1
+string event_loc_hint
+string event_loc_hint_1
+string event_popup
+string event_type_hint
+string event_type_hint_1
 string fab_transformation_scrim_behavior
 string fab_transformation_sheet_behavior
 string fcm_fallback_notification_channel_label
@@ -1619,7 +1630,6 @@ string house_rules_info
 string house_rules_info_1
 string join_info
 string join_info_1
-string large_text
 string login_info
 string login_info_1
 string mtrl_chip_close_icon_content_description
@@ -1628,6 +1638,10 @@ string nav_header_subtitle
 string nav_header_title
 string navigation_drawer_close
 string navigation_drawer_open
+string no_chat_info
+string no_chat_info_1
+string owner_clear_text
+string owner_clear_text_1
 string password_toggle_content_description
 string path_password_eye
 string path_password_eye_mask_strike_through

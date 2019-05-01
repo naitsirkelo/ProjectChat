@@ -1,19 +1,16 @@
 package com.example.projectchat;
 
-import android.app.NotificationManager;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.media.RingtoneManager;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.NotificationCompat;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v4.view.GravityCompat;
@@ -21,6 +18,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Base64;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.Menu;
@@ -28,6 +26,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -45,6 +44,7 @@ import com.firebase.client.Firebase;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -54,12 +54,7 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private static final int REQUEST_NEW_TASK = 1, REQUEST_CAPTURE_IMAGE = 2;
-    private static final String
-            urlEnglish = "http://www.nyinorge.no/en/Familiegjenforening/New-in-Norway/Housing/Renting-a-houseapartment/Your-rights-as-a-tenant/",
-            urlNorsk = "http://www.nyinorge.no/no/Familiegjenforening/Ny-i-Norge/Bolig/A-leie-bolig/Rettigheter-som-leietaker/",
-            notCompletedTextEng = "Done?",
-            notCompletedTextNor = "Gjort?",
-            removeText = "Remove";
+    private static final String notCompletedTextEng = "Done?", notCompletedTextNor = "Gjort?";
     TextView unameMain, customname, infoTextMain;
     ImageView avatar;
     LinearLayout layout;
@@ -68,7 +63,8 @@ public class MainActivity extends AppCompatActivity
     DrawerLayout drawer;
     Toolbar toolbar;
     Menu menu;
-    Button eventBox, refreshButton, boredButton;
+    Button refreshButton, boredButton;
+    ImageButton eventBox;
     int totalTasks, boxPaddingTop = 25, boxPaddingBot = 5;
 
 
@@ -84,7 +80,7 @@ public class MainActivity extends AppCompatActivity
 
         /* Customize toolbar on homepage. */
         toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle(languageSwitch("Room: ", "Rom: ") + UserDetails.roomId);
+        toolbar.setTitle(Utility.languageSwitch("Room: ", "Rom: ") + UserDetails.roomId);
         setSupportActionBar(toolbar);
 
         /* Button to create new task. */
@@ -94,7 +90,6 @@ public class MainActivity extends AppCompatActivity
             public void onClick(View view) {
                 Intent newTask = new Intent(MainActivity.this, CreateTask.class);
                 startActivityForResult(newTask, REQUEST_NEW_TASK);
-                overridePendingTransition(R.anim.enter_fromtop, R.anim.exit_fromtop);
             }
         });
 
@@ -107,37 +102,17 @@ public class MainActivity extends AppCompatActivity
         toggle.syncState();
 
         NavigationView navigationView = findViewById(R.id.nav_view);
-
-        switch (UserDetails.mode) {
-            case "nightmode":
-                navigationView.setBackgroundColor(Color.parseColor(UserDetails.nightmode));
-                break;
-            case "daymode":
-                navigationView.setBackgroundColor(Color.parseColor(UserDetails.daymode));
-                break;
-            default:
-                break;
-        }
         navigationView.setNavigationItemSelectedListener(this);
-
         View headerView = navigationView.getHeaderView(0);
 
-
+        /* Update task UI. */
         downloadTasks();
 
-
-        /* Setting current avatar to UserDetails. */
+        /* Setting current avatar to saved picture. */
         avatar = headerView.findViewById(R.id.avatarImageView);
-        if (UserDetails.avatar != null) {   /* If avatar already exists, load from storage. */
-            avatar = UserDetails.avatar;
-        }
+        updateAvatar();
 
-        /* else {    If no avatar exists, try to load from Firebase.
-            Glide.with(MainActivity.this)
-                    .load(UserDetails.avatarUrl)
-                    .into(avatar);
-        } */
-
+        /* Define popup and decide if it will show or not. */
         eventBox = findViewById(R.id.eventBox);
         eventBoxUI();
         eventBox.setOnClickListener(new View.OnClickListener() {
@@ -147,31 +122,16 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        refreshButton = findViewById(R.id.refreshButton);
-        refreshButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                /*
-                String e = "You need something to do, letting the others know!";
-                String n = "Trenger å finne på noe, sender varsel til de andre!";
-                Toast.makeText(MainActivity.this, languageSwitch(e, n), Toast.LENGTH_SHORT).show();
-                */
-                downloadTasks();
-            }
-        });
-
         /* Defining layout views. */
         unameMain = headerView.findViewById(R.id.usernameTextView);
         customname = headerView.findViewById(R.id.customnameTextView);
-
         unameMain.setText(UserDetails.username);
         customname.setText(UserDetails.showName);
+        infoTextMain = findViewById(R.id.infoTextMain);
 
         scrollView = findViewById(R.id.scrollView);
         scrollView.fullScroll(View.FOCUS_DOWN);
-
         layout = findViewById(R.id.layout1);
-        infoTextMain = findViewById(R.id.infoTextMain);
         menu = navigationView.getMenu();
 
         /* Bored button */
@@ -183,18 +143,15 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        setLanguage(UserDetails.language);
-
-
-
-
+        setLanguage();
     }
 
     /* Update language and open navigation drawer when returning. */
     @Override
     protected void onRestart() {
         super.onRestart();
-        setLanguage(UserDetails.language);
+        setLanguage();
+        eventBoxUI();
         drawer.openDrawer(GravityCompat.START);
     }
 
@@ -233,6 +190,7 @@ public class MainActivity extends AppCompatActivity
 
                                 boolean completed = false;
 
+                                /* If task is marked as completed, it will be marked green in UI. */
                                 if (obj.getString("completed").equals("1")) {
                                     completed = true;
                                 }
@@ -257,14 +215,30 @@ public class MainActivity extends AppCompatActivity
         rQueue.add(request);
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_refresh) {
+            finish();
+            startActivity(getIntent());
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+
     /* Add new task item to the Room view. */
-    private void addNewTask(final String task, final String area, final String timestamp, final String doneBy, boolean download, boolean done) {
+    private void addNewTask(final String task, final String area, final String timestamp,
+                            final String doneBy, boolean download, boolean done) {
 
         final TextView textFull = new TextView(MainActivity.this);
         final Button completedButton = new Button(MainActivity.this);
         final Button removeButton = new Button(MainActivity.this);
-
-        removeButton.setText(removeText);
 
         textFull.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
 
@@ -282,24 +256,12 @@ public class MainActivity extends AppCompatActivity
 
         if (done) {
             completedButton.setBackgroundColor(getResources().getColor(R.color.check_green));
-            String t = "OK! - " + doneBy;
+            String t = "OK!  -  " + doneBy;
             completedButton.setText(t);
             completedButton.setEnabled(false);
             completedButton.setTextColor(getResources().getColor(R.color.text_black));
         } else {
-            String t;
-            switch (UserDetails.language) {
-                case "English":
-                    t = notCompletedTextEng;
-                    break;
-                case "Norsk":
-                    t = notCompletedTextNor;
-                    break;
-                default:
-                    t = "";
-                    break;
-            }
-            completedButton.setText(t);
+            completedButton.setText(Utility.languageSwitch(notCompletedTextEng, notCompletedTextNor));
         }
 
         completedButton.setOnClickListener(new View.OnClickListener() {
@@ -312,6 +274,7 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
+        removeButton.setText(Utility.languageSwitch(Utility.removeTextEng, Utility.removeTextNor));
         removeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -335,11 +298,13 @@ public class MainActivity extends AppCompatActivity
         layout.addView(completedButton);
         layout.addView(removeButton);
 
+        /* Counting tasks and updating TextView. */
         totalTasks++;
         showInfo(totalTasks);
 
         scrollView.fullScroll(View.FOCUS_DOWN);
 
+        /* If added task was not downloaded from Firebase. */
         if (!download) {
             /* Placing data in map before pushing to Firebase. */
             Map<String, String> map = new HashMap<>();
@@ -389,34 +354,52 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    private void updateAvatar() {
+        SharedPreferences pref = this.getSharedPreferences("Login", MODE_PRIVATE);
+        String previouslyEncodedImage = pref.getString("imageData", "");
+
+        if(!previouslyEncodedImage.equals("") ){
+            byte[] b = Base64.decode(previouslyEncodedImage, Base64.DEFAULT);
+            Bitmap bitmap = BitmapFactory.decodeByteArray(b, 0, b.length);
+
+            RoundedBitmapDrawable roundedBitmapDrawable = RoundedBitmapDrawableFactory.create(getResources(), bitmap);
+            roundedBitmapDrawable.setCornerRadius(100.0f);
+            roundedBitmapDrawable.setAntiAlias(true);
+            avatar.setImageDrawable(roundedBitmapDrawable);
+        }
+    }
+
     /* Get data from other activities. */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_CAPTURE_IMAGE) {     /* Receive data from camera and convert to ImageView. */
-            if (resultCode == RESULT_OK) {
-                if (data != null && data.getExtras() != null) {
+        if (requestCode == REQUEST_CAPTURE_IMAGE && resultCode == RESULT_OK) {     /* Receive data from camera and convert to ImageView. */
+            if (data != null && data.getExtras() != null) {
 
-                    Bitmap imageBitmap = (Bitmap) data.getExtras().get("data");
-                    RoundedBitmapDrawable roundedBitmapDrawable = RoundedBitmapDrawableFactory.create(getResources(), imageBitmap);
+                /* Converting bitmap from camera to an ImageView. */
+                Bitmap imageBitmap = (Bitmap) data.getExtras().get("data");
+                RoundedBitmapDrawable roundedBitmapDrawable = RoundedBitmapDrawableFactory.create(getResources(), imageBitmap);
+                roundedBitmapDrawable.setCornerRadius(100.0f);
+                roundedBitmapDrawable.setAntiAlias(true);
+                avatar.setImageDrawable(roundedBitmapDrawable);
 
-                    roundedBitmapDrawable.setCornerRadius(100.0f);
-                    roundedBitmapDrawable.setAntiAlias(true);
-                    avatar.setImageDrawable(roundedBitmapDrawable);
-                    UserDetails.avatar = avatar;
+                /* Converting bitmap to Base64 before storing in Shared Pref. */
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                byte[] b = baos.toByteArray();
 
-                    drawer.openDrawer(Gravity.START);
-                }
+                String encodedImage = Base64.encodeToString(b, Base64.DEFAULT);
+                Utility.savePreference_1(MainActivity.this, "Login", "imageData", encodedImage);
+
+                drawer.openDrawer(Gravity.START);
             }
-        } else if (requestCode == REQUEST_NEW_TASK) {   /* Receive data about newly created task. */
-            if (resultCode == RESULT_OK) {
-                if (data != null && data.getExtras() != null) {
+        } else if (requestCode == REQUEST_NEW_TASK && resultCode == RESULT_OK) {   /* Receive data about newly created task. */
+            if (data != null && data.getExtras() != null) {
 
-                    String task = data.getStringExtra("taskVal");
-                    String area = data.getStringExtra("areaVal");
-                    String timestamp = data.getStringExtra("timestampVal");
+                String task = data.getStringExtra("taskVal");
+                String area = data.getStringExtra("areaVal");
+                String timestamp = data.getStringExtra("timestampVal");
 
-                    addNewTask(task, area, timestamp, "", false, false);
-                }
+                addNewTask(task, area, timestamp, "", false, false);
             }
         }
     }
@@ -431,14 +414,11 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        return false;
-    }
-
-    @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         /* Handling navigation view item clicks. */
         int id = item.getItemId();
+
+        /* Delaying opening of activities to allow the navigation drawer to close first. */
 
         if (id == R.id.nav_users) {      /* Chat room activity. */
             new Handler().postDelayed(new Runnable() {
@@ -487,20 +467,9 @@ public class MainActivity extends AppCompatActivity
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-
                     Intent openPage = new Intent(MainActivity.this, Webpage.class);
-                    switch (UserDetails.language) {
-                        case "English":
-                            openPage.putExtra("url", urlEnglish);
-                            startActivity(openPage);
-                            break;
-                        case "Norsk":
-                            openPage.putExtra("url", urlNorsk);
-                            startActivity(openPage);
-                            break;
-                        default:
-                            break;
-                    }
+                    /* Open English or Norwegian version depending on setting. */
+                    openPage.putExtra("url", Utility.languageSwitch(Utility.urlEnglish, Utility.urlNorsk));
                 }
             }, 250);
 
@@ -536,13 +505,47 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    /* Show or hide popup in Main Activity. */
     private void eventBoxUI() {
+        String url = "https://projectchat-bf300.firebaseio.com/rooms/" + UserDetails.roomId + "/events.json";
+        eventBox.setVisibility(View.GONE);
 
+        StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String s) {
+                try {
+                    JSONObject json = new JSONObject(s);
+                    Iterator<?> iterator = json.keys();
 
+                    /* Looking for events other members have made. */
+                    while (iterator.hasNext()) {
+                        String key = (String) iterator.next();
+                        JSONObject obj = json.getJSONObject(key);
+
+                        String user = obj.getString("user");
+                        String removed = obj.getString("hidden");
+
+                        /* If there exists an event by another user in the room, show popup. */
+                        if (!user.equals(UserDetails.showName) && removed.equals("0")) {
+                            eventBox.setVisibility(View.VISIBLE);
+                        }
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                System.out.println("" + volleyError);
+            }
+        });
+        RequestQueue rQueue = Volley.newRequestQueue(MainActivity.this);
+        rQueue.add(request);
     }
 
     /* Update text boxes based on user settings. */
-    private void setLanguage(String l) {
+    private void setLanguage() {
         drawerLanguage(UserDetails.language, menu.findItem(R.id.nav_shop), "Shop", "Handle Varer");
         drawerLanguage(UserDetails.language, menu.findItem(R.id.nav_events), "Events", "Arrangementer");
         drawerLanguage(UserDetails.language, menu.findItem(R.id.nav_rules), "House Rules", "Husregler");
@@ -552,38 +555,8 @@ public class MainActivity extends AppCompatActivity
         drawerLanguage(UserDetails.language, menu.findItem(R.id.nav_preferences), "Settings", "Innstillinger");
         drawerLanguage(UserDetails.language, menu.findItem(R.id.nav_logout), "Logout", "Logg ut");
 
-        if (l.equals("")) {
-            l = "English";
-        }
-
-        switch (l) {
-            case "English":
-                boredButton.setText(R.string.btn_bored_eng);
-                infoTextMain.setText(R.string.content_main_info);
-                break;
-            case "Norsk":
-                boredButton.setText(R.string.btn_bored_nor);
-                infoTextMain.setText(R.string.content_main_info_1);
-                break;
-            default:
-                break;
-        }
-    }
-
-    private String languageSwitch(String eng, String nor) {
-        String t;
-        switch (UserDetails.language) {
-            case "English":
-                t = eng;
-                break;
-            case "Norsk":
-                t = nor;
-                break;
-            default:
-                t = "";
-                break;
-        }
-        return t;
+        infoTextMain.setText(Utility.languageSwitch(getString(R.string.content_main_info), getString(R.string.content_main_info_1)));
+        boredButton.setText(Utility.languageSwitch(getString(R.string.btn_bored_eng), getString(R.string.btn_bored_nor)));
     }
 
     private void drawerLanguage(String lang, MenuItem item, String eng, String nor) {

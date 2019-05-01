@@ -81,16 +81,12 @@ public class Login extends AppCompatActivity {
 
                                         UserDetails.username = user;
                                         UserDetails.password = pass;
-
                                         UserDetails.showName = obj.getJSONObject(user).getString("showName");
 
-                                        SharedPreferences pref = getSharedPreferences("Login", MODE_PRIVATE);
-                                        SharedPreferences.Editor editor = pref.edit();
-
-                                        editor.putString("storedUser", UserDetails.username);
-                                        editor.putString("storedShow", UserDetails.showName);
-                                        editor.putString("storedPass", UserDetails.password);
-                                        editor.apply();
+                                        Utility.savePreference_3(Login.this, "Login",
+                                                "storedUser", UserDetails.username,
+                                                "storedShow", UserDetails.showName,
+                                                "storedPass", UserDetails.password);
 
                                         startActivity(new Intent(Login.this, Room.class));
                                         finish();
@@ -121,15 +117,11 @@ public class Login extends AppCompatActivity {
 
     private void updateValues() {
         SharedPreferences pref = this.getSharedPreferences("Login", MODE_PRIVATE);
-
         username.setText(pref.getString("storedUser", ""));
         password.setText(pref.getString("storedPass", ""));
 
         pref = getSharedPreferences("Settings", MODE_PRIVATE);
-        SharedPreferences.Editor editor = pref.edit();
-
         UserDetails.language = pref.getString("storedLanguage", "English");
-        editor.apply();
     }
 
     /* Update text boxes based on user settings. */

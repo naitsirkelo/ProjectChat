@@ -5,27 +5,58 @@
     build-mode="COLD"
     density="420dpi"
     format="10"
+    ir-eligibility="CLASS_ADDED"
     plugin-version="3.3.2"
-    timestamp="1556740915068"
+    timestamp="1556741462264"
     token="780237119108084264"
     verifier="COLD_SWAP_REQUESTED" >
 
     <task
         name="javac"
-        duration="0" />
+        duration="446" />
     <task
         name="instant-run-dex"
         duration="0" />
     <task
         name="instant-run-transform"
-        duration="0" />
+        duration="66" />
     <task
         name="verifier"
-        duration="0" />
+        duration="13" />
 
     <artifact
         location="/home/shift/AndroidStudioProjects/ProjectChat/app/build/intermediates/resources/instant-run/debug/resources-debug.apk"
         type="SPLIT" />
+    <artifact
+        location="/home/shift/AndroidStudioProjects/ProjectChat/app/build/intermediates/split-apk/debug/slices/slice_1.apk"
+        type="SPLIT" />
+    <artifact
+        location="/home/shift/AndroidStudioProjects/ProjectChat/app/build/intermediates/split-apk/debug/slices/slice_6.apk"
+        type="SPLIT" />
+    <artifact
+        location="/home/shift/AndroidStudioProjects/ProjectChat/app/build/intermediates/split-apk/debug/slices/slice_7.apk"
+        type="SPLIT" />
+    <artifact
+        location="/home/shift/AndroidStudioProjects/ProjectChat/app/build/intermediates/split-apk/debug/slices/slice_2.apk"
+        type="SPLIT" />
+    <artifact
+        location="/home/shift/AndroidStudioProjects/ProjectChat/app/build/intermediates/split-apk/debug/slices/slice_3.apk"
+        type="SPLIT" />
+    <artifact
+        location="/home/shift/AndroidStudioProjects/ProjectChat/app/build/intermediates/split-apk/debug/slices/slice_5.apk"
+        type="SPLIT" />
+    <artifact
+        location="/home/shift/AndroidStudioProjects/ProjectChat/app/build/intermediates/split-apk/debug/slices/slice_8.apk"
+        type="SPLIT" />
+    <artifact
+        location="/home/shift/AndroidStudioProjects/ProjectChat/app/build/intermediates/split-apk/debug/slices/slice_9.apk"
+        type="SPLIT" />
+    <artifact
+        location="/home/shift/AndroidStudioProjects/ProjectChat/app/build/intermediates/split-apk/debug/slices/slice_4.apk"
+        type="SPLIT" />
+    <artifact
+        location="/home/shift/AndroidStudioProjects/ProjectChat/app/build/intermediates/instant-run-apk/debug/app-debug.apk"
+        type="SPLIT_MAIN" />
 
     <build
         build-mode="FULL"
@@ -73,53 +104,42 @@
     </build>
     <build
         build-mode="COLD"
-        ir-eligibility="R_CLASS_CHANGE"
-        timestamp="1556725832532"
+        ir-eligibility="CLASS_ADDED"
+        timestamp="1556741462264"
         verifier="COLD_SWAP_REQUESTED" >
         <artifact
-            location="/home/shift/AndroidStudioProjects/ProjectChat/app/build/intermediates/instant-run-apk/debug/app-debug.apk"
-            type="SPLIT_MAIN" />
-    </build>
-    <build
-        build-mode="COLD"
-        ir-eligibility="CLASS_ADDED"
-        timestamp="1556740809912"
-        verifier="COLD_SWAP_REQUESTED" >
+            location="/home/shift/AndroidStudioProjects/ProjectChat/app/build/intermediates/resources/instant-run/debug/resources-debug.apk"
+            type="SPLIT" />
         <artifact
             location="/home/shift/AndroidStudioProjects/ProjectChat/app/build/intermediates/split-apk/debug/slices/slice_1.apk"
-            type="SPLIT" />
-        <artifact
-            location="/home/shift/AndroidStudioProjects/ProjectChat/app/build/intermediates/split-apk/debug/slices/slice_2.apk"
-            type="SPLIT" />
-        <artifact
-            location="/home/shift/AndroidStudioProjects/ProjectChat/app/build/intermediates/split-apk/debug/slices/slice_5.apk"
-            type="SPLIT" />
-        <artifact
-            location="/home/shift/AndroidStudioProjects/ProjectChat/app/build/intermediates/split-apk/debug/slices/slice_3.apk"
-            type="SPLIT" />
-        <artifact
-            location="/home/shift/AndroidStudioProjects/ProjectChat/app/build/intermediates/split-apk/debug/slices/slice_7.apk"
             type="SPLIT" />
         <artifact
             location="/home/shift/AndroidStudioProjects/ProjectChat/app/build/intermediates/split-apk/debug/slices/slice_6.apk"
             type="SPLIT" />
         <artifact
-            location="/home/shift/AndroidStudioProjects/ProjectChat/app/build/intermediates/split-apk/debug/slices/slice_4.apk"
+            location="/home/shift/AndroidStudioProjects/ProjectChat/app/build/intermediates/split-apk/debug/slices/slice_7.apk"
+            type="SPLIT" />
+        <artifact
+            location="/home/shift/AndroidStudioProjects/ProjectChat/app/build/intermediates/split-apk/debug/slices/slice_2.apk"
+            type="SPLIT" />
+        <artifact
+            location="/home/shift/AndroidStudioProjects/ProjectChat/app/build/intermediates/split-apk/debug/slices/slice_3.apk"
+            type="SPLIT" />
+        <artifact
+            location="/home/shift/AndroidStudioProjects/ProjectChat/app/build/intermediates/split-apk/debug/slices/slice_5.apk"
+            type="SPLIT" />
+        <artifact
+            location="/home/shift/AndroidStudioProjects/ProjectChat/app/build/intermediates/split-apk/debug/slices/slice_8.apk"
             type="SPLIT" />
         <artifact
             location="/home/shift/AndroidStudioProjects/ProjectChat/app/build/intermediates/split-apk/debug/slices/slice_9.apk"
             type="SPLIT" />
         <artifact
-            location="/home/shift/AndroidStudioProjects/ProjectChat/app/build/intermediates/split-apk/debug/slices/slice_8.apk"
+            location="/home/shift/AndroidStudioProjects/ProjectChat/app/build/intermediates/split-apk/debug/slices/slice_4.apk"
             type="SPLIT" />
-    </build>
-    <build
-        build-mode="COLD"
-        timestamp="1556740915068"
-        verifier="COLD_SWAP_REQUESTED" >
         <artifact
-            location="/home/shift/AndroidStudioProjects/ProjectChat/app/build/intermediates/resources/instant-run/debug/resources-debug.apk"
-            type="SPLIT" />
+            location="/home/shift/AndroidStudioProjects/ProjectChat/app/build/intermediates/instant-run-apk/debug/app-debug.apk"
+            type="SPLIT_MAIN" />
     </build>
 
 </instant-run>

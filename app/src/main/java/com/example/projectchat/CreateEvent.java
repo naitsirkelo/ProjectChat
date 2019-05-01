@@ -52,7 +52,15 @@ public class CreateEvent extends AppCompatActivity {
                 if (!type.equals("") && !where.equals("")) {
                     Intent back = new Intent(CreateEvent.this, Events.class);
                     String date = picker.getDayOfMonth() + "/" + (picker.getMonth() + 1) + "/" + picker.getYear();
-                    String time = timePicker.getCurrentHour() + ":" + timePicker.getCurrentMinute();
+
+                    int min = timePicker.getCurrentMinute();
+                    String time;
+                    if (min < 10) {
+                        time = timePicker.getCurrentHour() + ":0" + min;
+                    } else {
+                        time = timePicker.getCurrentHour() + ":" + min;
+                    }
+
                     back.putExtra("type", type);
                     back.putExtra("where", where);
                     back.putExtra("date", date);
@@ -67,15 +75,7 @@ public class CreateEvent extends AppCompatActivity {
         });
 
         createText = findViewById(R.id.createInfo);
-        setLanguage(UserDetails.language);
-    }
-
-    /* Update text boxes based on user settings. */
-    private void setLanguage(String l) {
-        if (l.equals("")) {
-            l = "English";
-        }
-        switch (l) {
+        switch (UserDetails.language) {
             case "English":
                 createText.setText(R.string.define_create_event_info);
                 break;
