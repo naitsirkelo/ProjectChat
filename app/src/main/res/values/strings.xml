@@ -32,6 +32,8 @@
     <!-- Main -->
     <string name="content_main_info">Use the button marked with a + sign to add a new Task to the Room, to show the other members what needs to be done.</string>
     <string name="content_main_info_1">Bruk knappen markert med + for å legge til en ny Oppgave til Rommet, for å vise medlemmene hva som trenger å gjøres.</string>
+    <string name="define_refresh">Refresh Tasks</string>
+    <string name="define_refresh_1">Oppdater Oppgaver</string>
 
     <!-- House Rules -->
     <string name="house_rules_info">Use the button marked with a + sign to add a new House Rule to the Room.</string>
@@ -52,10 +54,11 @@
     <string name="content_pref_info_1">Velg innstillinger og lagre dem ved å trykke knappen nederst til høyre.</string>
 
     <!-- Events -->
-    <string name="content_events_info">Book a room or area of the house for an event or gathering here.</string>
-    <string name="content_events_info_1">Her kan du reservere et rom eller område i huset til et arrangmenet.</string>
+    <string name="content_events_info">Book a room or area of the house for an event or gathering here. Max 1 per user. Refresh page to see own event, after creating it.</string>
+    <string name="content_events_info_1">Her kan du reservere et rom eller område i huset til et arrangmenet. Maks 1 per bruker. Last inn side på nytt for å se egen, etter opprettelse.</string>
     <string name="define_create_event_info">Choose the type, where, what date and when the event will start.</string>
     <string name="define_create_event_info_1">Velg typen, hvor, hvilken dato og når arrangementet skal være.</string>
+    <string name="event_popup">Popup</string>
 
     <!-- Shop -->
     <string name="content_shop_info">Click the + sign to add a new list of items you need to buy!</string>

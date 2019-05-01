@@ -24,6 +24,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -64,7 +65,7 @@ public class MainActivity extends AppCompatActivity
     DrawerLayout drawer;
     Toolbar toolbar;
     Menu menu;
-    Button eventBox, refreshButton;
+    ImageButton eventBox;
     int totalTasks, boxPaddingTop = 25, boxPaddingBot = 5;
 
 
@@ -90,7 +91,6 @@ public class MainActivity extends AppCompatActivity
             public void onClick(View view) {
                 Intent newTask = new Intent(MainActivity.this, CreateTask.class);
                 startActivityForResult(newTask, REQUEST_NEW_TASK);
-                overridePendingTransition(R.anim.enter_fromtop, R.anim.exit_fromtop);
             }
         });
 
@@ -102,7 +102,6 @@ public class MainActivity extends AppCompatActivity
         toggle.syncState();
 
         NavigationView navigationView = findViewById(R.id.nav_view);
-
         switch (UserDetails.mode) {
             case "nightmode":
                 navigationView.setBackgroundColor(Color.parseColor(UserDetails.nightmode));
@@ -114,7 +113,6 @@ public class MainActivity extends AppCompatActivity
                 break;
         }
         navigationView.setNavigationItemSelectedListener(this);
-
         View headerView = navigationView.getHeaderView(0);
 
 
@@ -135,23 +133,11 @@ public class MainActivity extends AppCompatActivity
 
         eventBox = findViewById(R.id.eventBox);
         eventBoxUI();
+
         eventBox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(MainActivity.this, Events.class));
-            }
-        });
-
-        refreshButton = findViewById(R.id.refreshButton);
-        refreshButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                /*
-                String e = "You need something to do, letting the others know!";
-                String n = "Trenger å finne på noe, sender varsel til de andre!";
-                Toast.makeText(MainActivity.this, languageSwitch(e, n), Toast.LENGTH_SHORT).show();
-                */
-                downloadTasks();
             }
         });
 
@@ -177,6 +163,7 @@ public class MainActivity extends AppCompatActivity
     protected void onRestart() {
         super.onRestart();
         setLanguage(UserDetails.language);
+        eventBoxUI();
         drawer.openDrawer(GravityCompat.START);
     }
 
@@ -239,6 +226,23 @@ public class MainActivity extends AppCompatActivity
         rQueue.add(request);
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_refresh) {
+            finish();
+            startActivity(getIntent());
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+
     /* Add new task item to the Room view. */
     private void addNewTask(final String task, final String area, final String timestamp, final String doneBy, boolean download, boolean done) {
 
@@ -269,19 +273,7 @@ public class MainActivity extends AppCompatActivity
             completedButton.setEnabled(false);
             completedButton.setTextColor(getResources().getColor(R.color.text_black));
         } else {
-            String t;
-            switch (UserDetails.language) {
-                case "English":
-                    t = notCompletedTextEng;
-                    break;
-                case "Norsk":
-                    t = notCompletedTextNor;
-                    break;
-                default:
-                    t = "";
-                    break;
-            }
-            completedButton.setText(t);
+            completedButton.setText(languageSwitch(notCompletedTextEng, notCompletedTextNor));
         }
 
         completedButton.setOnClickListener(new View.OnClickListener() {
@@ -413,11 +405,6 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        return false;
-    }
-
-    @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         /* Handling navigation view item clicks. */
         int id = item.getItemId();
@@ -519,8 +506,40 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void eventBoxUI() {
+        String url = "https://projectchat-bf300.firebaseio.com/rooms/" + UserDetails.roomId + "/events.json";
+        eventBox.setVisibility(View.GONE);
 
+        StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String s) {
+                try {
+                    JSONObject json = new JSONObject(s);
+                    Iterator<?> iterator = json.keys();
 
+                    /* Looking for events other members have made. */
+                    while (iterator.hasNext()) {
+                        String key = (String) iterator.next();
+                        JSONObject obj = json.getJSONObject(key);
+
+                        String user = obj.getString("user");
+                        String removed = obj.getString("hidden");
+
+                        if (!user.equals(UserDetails.showName) && removed.equals("0")) {
+                            eventBox.setVisibility(View.VISIBLE);
+                        }
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                System.out.println("" + volleyError);
+            }
+        });
+        RequestQueue rQueue = Volley.newRequestQueue(MainActivity.this);
+        rQueue.add(request);
     }
 
     /* Update text boxes based on user settings. */

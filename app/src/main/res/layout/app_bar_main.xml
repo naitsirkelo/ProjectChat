@@ -19,23 +19,21 @@
             android:background="@color/colorPrimary"
             app:popupTheme="@style/AppTheme.PopupOverlay">
 
-            <Button
-                android:id="@+id/refreshButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                app:backgroundTint="@color/refresh_button"
-                app:srcCompat="@drawable/ic_refresh"/>
         </android.support.v7.widget.Toolbar>
     </android.support.design.widget.AppBarLayout>
 
     <include layout="@layout/content_main" />
 
-    <Button
+    <ImageButton
         android:id="@+id/eventBox"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|start" />
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="bottom|start"
+        android:background="@null"
+        android:contentDescription="@string/event_popup"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_eventbox"
+        app:tint="@color/colorPrimary" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"

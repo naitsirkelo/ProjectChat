@@ -27,8 +27,8 @@
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                android:paddingBottom="16dp"
                 android:layout_gravity="center"
+                android:paddingBottom="16dp"
                 app:layout_collapseMode="pin"
                 app:popupTheme="@style/AppTheme.PopupOverlay" />
 
@@ -36,17 +36,6 @@
     </android.support.design.widget.AppBarLayout>
 
     <include layout="@layout/content_events" />
-
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <LinearLayout android:id="@+id/layoutEvents"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginBottom="10dp">
-        </LinearLayout>
-    </RelativeLayout>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/newEvent"
@@ -56,14 +45,5 @@
         app:layout_anchor="@id/app_bar"
         app:layout_anchorGravity="bottom|end"
         app:srcCompat="@android:drawable/ic_input_add" />
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/removeEvent"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/fab_margin"
-        app:layout_anchor="@id/app_bar"
-        app:layout_anchorGravity="bottom|start"
-        app:srcCompat="@android:drawable/ic_input_delete" />
 
 </android.support.design.widget.CoordinatorLayout>

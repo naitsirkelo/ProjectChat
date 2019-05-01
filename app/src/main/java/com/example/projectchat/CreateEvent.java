@@ -52,7 +52,15 @@ public class CreateEvent extends AppCompatActivity {
                 if (!type.equals("") && !where.equals("")) {
                     Intent back = new Intent(CreateEvent.this, Events.class);
                     String date = picker.getDayOfMonth() + "/" + (picker.getMonth() + 1) + "/" + picker.getYear();
-                    String time = timePicker.getCurrentHour() + ":" + timePicker.getCurrentMinute();
+
+                    int min = timePicker.getCurrentMinute();
+                    String time;
+                    if (min < 10) {
+                        time = timePicker.getCurrentHour() + ":0" + min;
+                    } else {
+                        time = timePicker.getCurrentHour() + ":" + min;
+                    }
+
                     back.putExtra("type", type);
                     back.putExtra("where", where);
                     back.putExtra("date", date);

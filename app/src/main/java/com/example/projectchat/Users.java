@@ -3,7 +3,6 @@ package com.example.projectchat;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
@@ -86,7 +85,6 @@ public class Users extends AppCompatActivity {
                 /* Add to chat list if users have same room ID. */
                 if (!key.equals(UserDetails.username) && room.equals(UserDetails.roomId)) {
                     al.add(key);
-
                 }
                 totalUsers++;
             }

@@ -206,7 +206,6 @@ public class HouseRules extends AppCompatActivity {
 
     /* Accessing database to remove stored rule. */
     private void removeRule(String rule) {
-
         String key = formatKey(rule);
         reference = new Firebase("https://projectchat-bf300.firebaseio.com/rooms/" + UserDetails.roomId + "/rules");
         reference.child(key).child("hidden").setValue("1");
