@@ -79,6 +79,17 @@ public class Events extends AppCompatActivity {
                 }
             }
         });
+
+        switch (UserDetails.language) {
+            case "English":
+                eventText.setText(R.string.content_events_info);
+                break;
+            case "Norsk":
+                eventText.setText(R.string.content_events_info_1);
+                break;
+            default:
+                break;
+        }
     }
 
     @Override
@@ -214,7 +225,7 @@ public class Events extends AppCompatActivity {
                     hideEvent(formatKey(type, time));
                 }
             });
-            removeButton.setText("Remove Own Event");
+            removeButton.setText(Utility.languageSwitch("Remove Own Event", "Slett Eget Arngm."));
             layoutEvents.addView(removeButton);
 
             UserDetails.event = 1;
@@ -228,22 +239,5 @@ public class Events extends AppCompatActivity {
         String tt = time.replaceAll("[^a-zA-Z0-9]", "");
         t = t.substring(0, Math.min(t.length(), keyLength));
         return (UserDetails.showName + "_" + t + "_" + tt);
-    }
-
-    /* Update text boxes based on user settings. */
-    private void setLanguage(String l) {
-        if (l.equals("")) {
-            l = "English";
-        }
-        switch (l) {
-            case "English":
-                eventText.setText(R.string.content_events_info);
-                break;
-            case "Norsk":
-                eventText.setText(R.string.content_events_info_1);
-                break;
-            default:
-                break;
-        }
     }
 }

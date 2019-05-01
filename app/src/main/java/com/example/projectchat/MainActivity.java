@@ -3,7 +3,6 @@ package com.example.projectchat;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
@@ -51,12 +50,7 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private static final int REQUEST_NEW_TASK = 1, REQUEST_CAPTURE_IMAGE = 2;
-    private static final String
-            urlEnglish = "http://www.nyinorge.no/en/Familiegjenforening/New-in-Norway/Housing/Renting-a-houseapartment/Your-rights-as-a-tenant/",
-            urlNorsk = "http://www.nyinorge.no/no/Familiegjenforening/Ny-i-Norge/Bolig/A-leie-bolig/Rettigheter-som-leietaker/",
-            notCompletedTextEng = "Done?",
-            notCompletedTextNor = "Gjort?",
-            removeText = "Remove";
+    private static final String notCompletedTextEng = "Done?", notCompletedTextNor = "Gjort?";
     TextView unameMain, customname, infoTextMain;
     ImageView avatar;
     LinearLayout layout;
@@ -81,7 +75,7 @@ public class MainActivity extends AppCompatActivity
 
         /* Customize toolbar on homepage. */
         toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle(languageSwitch("Room: ", "Rom: ") + UserDetails.roomId);
+        toolbar.setTitle(Utility.languageSwitch("Room: ", "Rom: ") + UserDetails.roomId);
         setSupportActionBar(toolbar);
 
         /* Button to create new task. */
@@ -102,20 +96,11 @@ public class MainActivity extends AppCompatActivity
         toggle.syncState();
 
         NavigationView navigationView = findViewById(R.id.nav_view);
-        switch (UserDetails.mode) {
-            case "nightmode":
-                navigationView.setBackgroundColor(Color.parseColor(UserDetails.nightmode));
-                break;
-            case "daymode":
-                navigationView.setBackgroundColor(Color.parseColor(UserDetails.daymode));
-                break;
-            default:
-                break;
-        }
         navigationView.setNavigationItemSelectedListener(this);
         View headerView = navigationView.getHeaderView(0);
 
 
+        /* Update task UI. */
         downloadTasks();
 
 
@@ -124,12 +109,6 @@ public class MainActivity extends AppCompatActivity
         if (UserDetails.avatar != null) {   /* If avatar already exists, load from storage. */
             avatar = UserDetails.avatar;
         }
-
-        /* else {    If no avatar exists, try to load from Firebase.
-            Glide.with(MainActivity.this)
-                    .load(UserDetails.avatarUrl)
-                    .into(avatar);
-        } */
 
         eventBox = findViewById(R.id.eventBox);
         eventBoxUI();
@@ -144,15 +123,13 @@ public class MainActivity extends AppCompatActivity
         /* Defining layout views. */
         unameMain = headerView.findViewById(R.id.usernameTextView);
         customname = headerView.findViewById(R.id.customnameTextView);
-
         unameMain.setText(UserDetails.username);
         customname.setText(UserDetails.showName);
+        infoTextMain = findViewById(R.id.infoTextMain);
 
         scrollView = findViewById(R.id.scrollView);
         scrollView.fullScroll(View.FOCUS_DOWN);
-
         layout = findViewById(R.id.layout1);
-        infoTextMain = findViewById(R.id.infoTextMain);
         menu = navigationView.getMenu();
 
         setLanguage(UserDetails.language);
@@ -202,6 +179,7 @@ public class MainActivity extends AppCompatActivity
 
                                 boolean completed = false;
 
+                                /* If task is marked as completed, it will be marked green in UI. */
                                 if (obj.getString("completed").equals("1")) {
                                     completed = true;
                                 }
@@ -244,13 +222,12 @@ public class MainActivity extends AppCompatActivity
     }
 
     /* Add new task item to the Room view. */
-    private void addNewTask(final String task, final String area, final String timestamp, final String doneBy, boolean download, boolean done) {
+    private void addNewTask(final String task, final String area, final String timestamp,
+                            final String doneBy, boolean download, boolean done) {
 
         final TextView textFull = new TextView(MainActivity.this);
         final Button completedButton = new Button(MainActivity.this);
         final Button removeButton = new Button(MainActivity.this);
-
-        removeButton.setText(removeText);
 
         textFull.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
 
@@ -268,12 +245,12 @@ public class MainActivity extends AppCompatActivity
 
         if (done) {
             completedButton.setBackgroundColor(getResources().getColor(R.color.check_green));
-            String t = "OK! - " + doneBy;
+            String t = "OK!  -  " + doneBy;
             completedButton.setText(t);
             completedButton.setEnabled(false);
             completedButton.setTextColor(getResources().getColor(R.color.text_black));
         } else {
-            completedButton.setText(languageSwitch(notCompletedTextEng, notCompletedTextNor));
+            completedButton.setText(Utility.languageSwitch(notCompletedTextEng, notCompletedTextNor));
         }
 
         completedButton.setOnClickListener(new View.OnClickListener() {
@@ -286,6 +263,7 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
+        removeButton.setText(Utility.languageSwitch(Utility.removeTextEng, Utility.removeTextNor));
         removeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -309,11 +287,13 @@ public class MainActivity extends AppCompatActivity
         layout.addView(completedButton);
         layout.addView(removeButton);
 
+        /* Counting tasks and updating TextView. */
         totalTasks++;
         showInfo(totalTasks);
 
         scrollView.fullScroll(View.FOCUS_DOWN);
 
+        /* If added task was not downloaded from Firebase. */
         if (!download) {
             /* Placing data in map before pushing to Firebase. */
             Map<String, String> map = new HashMap<>();
@@ -366,31 +346,28 @@ public class MainActivity extends AppCompatActivity
     /* Get data from other activities. */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_CAPTURE_IMAGE) {     /* Receive data from camera and convert to ImageView. */
-            if (resultCode == RESULT_OK) {
-                if (data != null && data.getExtras() != null) {
+        if (requestCode == REQUEST_CAPTURE_IMAGE && resultCode == RESULT_OK) {     /* Receive data from camera and convert to ImageView. */
+            if (data != null && data.getExtras() != null) {
 
-                    Bitmap imageBitmap = (Bitmap) data.getExtras().get("data");
-                    RoundedBitmapDrawable roundedBitmapDrawable = RoundedBitmapDrawableFactory.create(getResources(), imageBitmap);
+                /* Converting bitmap from camera to an ImageView. */
+                Bitmap imageBitmap = (Bitmap) data.getExtras().get("data");
+                RoundedBitmapDrawable roundedBitmapDrawable = RoundedBitmapDrawableFactory.create(getResources(), imageBitmap);
 
-                    roundedBitmapDrawable.setCornerRadius(100.0f);
-                    roundedBitmapDrawable.setAntiAlias(true);
-                    avatar.setImageDrawable(roundedBitmapDrawable);
-                    UserDetails.avatar = avatar;
+                roundedBitmapDrawable.setCornerRadius(100.0f);
+                roundedBitmapDrawable.setAntiAlias(true);
+                avatar.setImageDrawable(roundedBitmapDrawable);
+                UserDetails.avatar = avatar;
 
-                    drawer.openDrawer(Gravity.START);
-                }
+                drawer.openDrawer(Gravity.START);
             }
-        } else if (requestCode == REQUEST_NEW_TASK) {   /* Receive data about newly created task. */
-            if (resultCode == RESULT_OK) {
-                if (data != null && data.getExtras() != null) {
+        } else if (requestCode == REQUEST_NEW_TASK && resultCode == RESULT_OK) {   /* Receive data about newly created task. */
+            if (data != null && data.getExtras() != null) {
 
-                    String task = data.getStringExtra("taskVal");
-                    String area = data.getStringExtra("areaVal");
-                    String timestamp = data.getStringExtra("timestampVal");
+                String task = data.getStringExtra("taskVal");
+                String area = data.getStringExtra("areaVal");
+                String timestamp = data.getStringExtra("timestampVal");
 
-                    addNewTask(task, area, timestamp, "", false, false);
-                }
+                addNewTask(task, area, timestamp, "", false, false);
             }
         }
     }
@@ -408,6 +385,8 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         /* Handling navigation view item clicks. */
         int id = item.getItemId();
+
+        /* Delaying opening of activities to allow the navigation drawer to close first. */
 
         if (id == R.id.nav_users) {      /* Chat room activity. */
             new Handler().postDelayed(new Runnable() {
@@ -456,20 +435,9 @@ public class MainActivity extends AppCompatActivity
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-
                     Intent openPage = new Intent(MainActivity.this, Webpage.class);
-                    switch (UserDetails.language) {
-                        case "English":
-                            openPage.putExtra("url", urlEnglish);
-                            startActivity(openPage);
-                            break;
-                        case "Norsk":
-                            openPage.putExtra("url", urlNorsk);
-                            startActivity(openPage);
-                            break;
-                        default:
-                            break;
-                    }
+                    /* Open English or Norwegian version depending on setting. */
+                    openPage.putExtra("url", Utility.languageSwitch(Utility.urlEnglish, Utility.urlNorsk));
                 }
             }, 250);
 
@@ -505,6 +473,7 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    /* Show or hide popup in Main Activity. */
     private void eventBoxUI() {
         String url = "https://projectchat-bf300.firebaseio.com/rooms/" + UserDetails.roomId + "/events.json";
         eventBox.setVisibility(View.GONE);
@@ -524,6 +493,7 @@ public class MainActivity extends AppCompatActivity
                         String user = obj.getString("user");
                         String removed = obj.getString("hidden");
 
+                        /* If there exists an event by another user in the room, show popup. */
                         if (!user.equals(UserDetails.showName) && removed.equals("0")) {
                             eventBox.setVisibility(View.VISIBLE);
                         }
@@ -566,22 +536,6 @@ public class MainActivity extends AppCompatActivity
             default:
                 break;
         }
-    }
-
-    private String languageSwitch(String eng, String nor) {
-        String t;
-        switch (UserDetails.language) {
-            case "English":
-                t = eng;
-                break;
-            case "Norsk":
-                t = nor;
-                break;
-            default:
-                t = "";
-                break;
-        }
-        return t;
     }
 
     private void drawerLanguage(String lang, MenuItem item, String eng, String nor) {

@@ -75,15 +75,7 @@ public class CreateEvent extends AppCompatActivity {
         });
 
         createText = findViewById(R.id.createInfo);
-        setLanguage(UserDetails.language);
-    }
-
-    /* Update text boxes based on user settings. */
-    private void setLanguage(String l) {
-        if (l.equals("")) {
-            l = "English";
-        }
-        switch (l) {
+        switch (UserDetails.language) {
             case "English":
                 createText.setText(R.string.define_create_event_info);
                 break;

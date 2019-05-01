@@ -57,6 +57,7 @@ public class Room extends AppCompatActivity {
             }
         });
 
+        /* Updating UI. */
         SharedPreferences pref = this.getSharedPreferences("Login", MODE_PRIVATE);
         roomId.setText(pref.getString("storedRoom", ""));
 
@@ -89,18 +90,13 @@ public class Room extends AppCompatActivity {
                                     } else if (obj.getJSONObject(id).getString("id").equals(id)) {
 
                                         UserDetails.roomId = id;
-
-                                        SharedPreferences pref = getSharedPreferences("Login", MODE_PRIVATE);
-                                        SharedPreferences.Editor editor = pref.edit();
-
-                                        editor.putString("storedRoom", UserDetails.roomId);
-                                        editor.apply();
+                                        Utility.savePreference_1(Room.this, "Login", "storedRoom", UserDetails.roomId);
 
                                         startActivity(new Intent(Room.this, MainActivity.class));
                                         finish();
                                         overridePendingTransition(R.anim.fadein, R.anim.fadeout);
                                     } else {
-                                        Toast.makeText(Room.this, "Incorrect Room ID", Toast.LENGTH_LONG).show();
+                                        Toast.makeText(Room.this, "Incorrect Room ID.", Toast.LENGTH_LONG).show();
                                     }
                                 } catch (JSONException e) {
                                     e.printStackTrace();
@@ -128,6 +124,7 @@ public class Room extends AppCompatActivity {
                         public void onResponse(String s) {
                             Firebase reference = new Firebase("https://projectchat-bf300.firebaseio.com/users/" + UserDetails.username);
 
+                            /* Update stored room ID on user. */
                             reference.child("room").setValue(UserDetails.roomId);
                         }
 
