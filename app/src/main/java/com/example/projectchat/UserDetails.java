@@ -15,6 +15,7 @@ public class UserDetails {
     static ImageView avatar = null;
 
     static int event = 0;
+    static int item = 0;
 
     static String mode = "";
     static String nightmode = "#292929";

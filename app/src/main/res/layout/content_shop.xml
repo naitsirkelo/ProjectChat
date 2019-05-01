@@ -14,5 +14,25 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/text_margin"
         android:paddingTop="@dimen/text_margin" />
+    <ScrollView
+        android:id="@+id/scrollViewShop"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="20">
+
+        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/relative"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:id="@+id/layoutShop"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:orientation="vertical"
+                android:paddingTop="@dimen/text_margin" />
+        </RelativeLayout>
+    </ScrollView>
 
 </android.support.v4.widget.NestedScrollView>

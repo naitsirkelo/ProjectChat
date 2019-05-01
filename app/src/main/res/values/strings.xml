@@ -8,6 +8,8 @@
     <string name="nav_header_title">Android Studio</string>
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
+    <string name="btn_bored_nor">Jeg kjeder meg</string>
+    <string name="btn_bored_eng">I am bored</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_settings">Settings</string>
 
@@ -24,6 +26,17 @@
     <string name="login_info_1">Logg inn</string>
     <string name="register_user_info">No account yet? Register here</string>
     <string name="register_user_info_1">Har ikke bruker? Registrer deg her"</string>
+
+    <!-- Add item -->
+    <string name="placeholder_item_eng">Item name</string>
+    <string name="placeholder_item_nor">Navn på vare</string>
+    <string name="radio_common_eng">For everyone</string>
+    <string name="radio_common_nor">For alle</string>
+    <string name="radio_private_eng">For me</string>
+    <string name="radio_private_nor">For meg</string>
+
+
+
 
     <!-- Search -->
     <string name="app_label">Co-Living"</string>

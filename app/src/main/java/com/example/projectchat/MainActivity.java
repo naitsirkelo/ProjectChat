@@ -1,15 +1,19 @@
 package com.example.projectchat;
 
+import android.app.NotificationManager;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.media.RingtoneManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v4.view.GravityCompat;
@@ -64,7 +68,7 @@ public class MainActivity extends AppCompatActivity
     DrawerLayout drawer;
     Toolbar toolbar;
     Menu menu;
-    Button eventBox, refreshButton;
+    Button eventBox, refreshButton, boredButton;
     int totalTasks, boxPaddingTop = 25, boxPaddingBot = 5;
 
 
@@ -93,6 +97,7 @@ public class MainActivity extends AppCompatActivity
                 overridePendingTransition(R.anim.enter_fromtop, R.anim.exit_fromtop);
             }
         });
+
 
         /* Defining navigation drawer. */
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -169,7 +174,20 @@ public class MainActivity extends AppCompatActivity
         infoTextMain = findViewById(R.id.infoTextMain);
         menu = navigationView.getMenu();
 
+        /* Bored button */
+        boredButton = headerView.findViewById(R.id.btn_bored);
+        boredButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                amBored();
+            }
+        });
+
         setLanguage(UserDetails.language);
+
+
+
+
     }
 
     /* Update language and open navigation drawer when returning. */
@@ -537,11 +555,14 @@ public class MainActivity extends AppCompatActivity
         if (l.equals("")) {
             l = "English";
         }
+
         switch (l) {
             case "English":
+                boredButton.setText(R.string.btn_bored_eng);
                 infoTextMain.setText(R.string.content_main_info);
                 break;
             case "Norsk":
+                boredButton.setText(R.string.btn_bored_nor);
                 infoTextMain.setText(R.string.content_main_info_1);
                 break;
             default:
@@ -577,4 +598,13 @@ public class MainActivity extends AppCompatActivity
                 break;
         }
     }
+
+    public void amBored() {  //When bored button is pressed
+        Toast.makeText(MainActivity.this, "Du kjeder deg som fan", Toast.LENGTH_LONG).show();
+       // MyFirebaseMessagingService notification = new MyFirebaseMessagingService();
+        //notification.sendNotification("sup?", "dette er bare en test egt", this);
+    }
 }
+
+
+
