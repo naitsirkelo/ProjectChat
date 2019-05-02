@@ -1,10 +1,27 @@
 {
     "logs": [
         {
-            "outputFile": "/home/shift/AndroidStudioProjects/ProjectChat/app/build/intermediates/incremental/mergeDebugResources/merged.dir/values-it/values-it.xml",
+            "outputFile": "/Users/oleklarsen/AndroidStudioProjects/ProjectChat/app/build/intermediates/incremental/mergeDebugResources/merged.dir/values-it/values-it.xml",
             "map": [
                 {
-                    "source": "/home/shift/.gradle/caches/transforms-1/files-1.1/play-services-basement-16.2.0.aar/3016991b33692e692bae6f6d9dfd4803/res/values-it/values.xml",
+                    "source": "/Users/oleklarsen/.gradle/caches/transforms-1/files-1.1/appcompat-v7-28.0.0.aar/9ca0db21714c40141e6752cb856e94eb/res/values-it/values-it.xml",
+                    "from": {
+                        "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29",
+                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
+                        "startOffsets": "105,214,314,423,507,616,741,818,894,986,1080,1174,1268,1370,1464,1561,1667,1759,1851,1932,2038,2146,2244,2348,2453,2560,2723,2823",
+                        "endColumns": "108,99,108,83,108,124,76,75,91,93,93,93,101,93,96,105,91,91,80,105,107,97,103,104,106,162,99,82",
+                        "endOffsets": "209,309,418,502,611,736,813,889,981,1075,1169,1263,1365,1459,1556,1662,1754,1846,1927,2033,2141,2239,2343,2448,2555,2718,2818,2901"
+                    },
+                    "to": {
+                        "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,48",
+                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
+                        "startOffsets": "105,214,314,423,507,616,741,818,894,986,1080,1174,1268,1370,1464,1561,1667,1759,1851,1932,2038,2146,2244,2348,2453,2560,2723,5638",
+                        "endColumns": "108,99,108,83,108,124,76,75,91,93,93,93,101,93,96,105,91,91,80,105,107,97,103,104,106,162,99,82",
+                        "endOffsets": "209,309,418,502,611,736,813,889,981,1075,1169,1263,1365,1459,1556,1662,1754,1846,1927,2033,2141,2239,2343,2448,2555,2718,2818,5716"
+                    }
+                },
+                {
+                    "source": "/Users/oleklarsen/.gradle/caches/transforms-1/files-1.1/play-services-basement-16.2.0.aar/095d035e5260e849648c263090803ec9/res/values-it/values.xml",
                     "from": {
                         "startLines": "4",
                         "startColumns": "0",
@@ -21,7 +38,7 @@
                     }
                 },
                 {
-                    "source": "/home/shift/.gradle/caches/transforms-1/files-1.1/firebase-messaging-17.6.0.aar/22ed6b63e032f0b0ebf864b146f1eba4/res/values-it/values.xml",
+                    "source": "/Users/oleklarsen/.gradle/caches/transforms-1/files-1.1/firebase-messaging-17.6.0.aar/a6ff9771edfccdfff4a112ea0c108a5a/res/values-it/values.xml",
                     "from": {
                         "startLines": "4",
                         "startColumns": "0",
@@ -38,7 +55,7 @@
                     }
                 },
                 {
-                    "source": "/home/shift/.gradle/caches/transforms-1/files-1.1/play-services-base-16.0.1.aar/d3e64902c4546544257834fe86714eb2/res/values-it/values.xml",
+                    "source": "/Users/oleklarsen/.gradle/caches/transforms-1/files-1.1/play-services-base-16.0.1.aar/f93d8be3a2f36402bec40f23350116de/res/values-it/values.xml",
                     "from": {
                         "startLines": "4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20",
                         "startColumns": "0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0",
@@ -55,7 +72,7 @@
                     }
                 },
                 {
-                    "source": "/home/shift/.gradle/caches/transforms-1/files-1.1/support-compat-28.0.0.aar/8902b12f4a2274b2bd8eac4c16dd5448/res/values-it/values-it.xml",
+                    "source": "/Users/oleklarsen/.gradle/caches/transforms-1/files-1.1/support-compat-28.0.0.aar/18e3717ddb8c1e981788f06cd8e58926/res/values-it/values-it.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",
@@ -69,23 +86,6 @@
                         "startOffsets": "5721",
                         "endColumns": "100",
                         "endOffsets": "5817"
-                    }
-                },
-                {
-                    "source": "/home/shift/.gradle/caches/transforms-1/files-1.1/appcompat-v7-28.0.0.aar/e3a352a5d98c0508b65bb50c5a5a6541/res/values-it/values-it.xml",
-                    "from": {
-                        "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29",
-                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
-                        "startOffsets": "105,214,314,423,507,616,741,818,894,986,1080,1174,1268,1370,1464,1561,1667,1759,1851,1932,2038,2146,2244,2348,2453,2560,2723,2823",
-                        "endColumns": "108,99,108,83,108,124,76,75,91,93,93,93,101,93,96,105,91,91,80,105,107,97,103,104,106,162,99,82",
-                        "endOffsets": "209,309,418,502,611,736,813,889,981,1075,1169,1263,1365,1459,1556,1662,1754,1846,1927,2033,2141,2239,2343,2448,2555,2718,2818,2901"
-                    },
-                    "to": {
-                        "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,48",
-                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
-                        "startOffsets": "105,214,314,423,507,616,741,818,894,986,1080,1174,1268,1370,1464,1561,1667,1759,1851,1932,2038,2146,2244,2348,2453,2560,2723,5638",
-                        "endColumns": "108,99,108,83,108,124,76,75,91,93,93,93,101,93,96,105,91,91,80,105,107,97,103,104,106,162,99,82",
-                        "endOffsets": "209,309,418,502,611,736,813,889,981,1075,1169,1263,1365,1459,1556,1662,1754,1846,1927,2033,2141,2239,2343,2448,2555,2718,2818,5716"
                     }
                 }
             ]

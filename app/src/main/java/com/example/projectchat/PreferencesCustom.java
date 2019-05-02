@@ -61,7 +61,7 @@ public class PreferencesCustom extends AppCompatActivity {
         });
 
         /* Set language based on Userdetails. */
-        findViewById(R.id.preferenceInfo);
+        preferenceText = findViewById(R.id.preferenceInfo);
         preferenceText.setText(Utility.languageSwitch(getString(R.string.content_pref_info), getString(R.string.content_pref_info_1)));
     }
 }
