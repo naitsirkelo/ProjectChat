@@ -49,6 +49,14 @@
                     android:entries="@array/pref_lang_languages_titles"
                     android:prompt="@string/pref_lang_language" />
 
+                <Button
+                    android:id="@+id/adminButton"
+                    style="@style/Widget.AppCompat.Button.Colored"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:textSize="18sp" />
+
             </LinearLayout>
         </ScrollView>
     </LinearLayout>

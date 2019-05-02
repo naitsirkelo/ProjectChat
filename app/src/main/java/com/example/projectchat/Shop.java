@@ -157,7 +157,7 @@ public class Shop extends AppCompatActivity {
         if (forWho.equals("common")) {
             full = full + "\n" + Utility.languageSwitch("For Everyone", "Felles");
         } else {
-            full = full + "\n" + Utility.languageSwitch("Private", "Private");
+            full = full + "\n" + Utility.languageSwitch("Private", "Private") + " - " + forWho;
         }
         textItem.setText(full);
         textItem.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
@@ -216,7 +216,7 @@ public class Shop extends AppCompatActivity {
     private String formatKey(String itemName, String forWho) {
         String t = itemName.replaceAll("[^a-zA-Z0-9]", "");
         String tt = forWho.replace("[^a-zA-Z0-9]", "");
-        return (UserDetails.showName + "_" + t + "_" + tt);
+        return (t + "_" + tt);
     }
 
     /* Accessing database to remove stored item. */

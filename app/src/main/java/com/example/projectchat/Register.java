@@ -87,14 +87,19 @@ public class Register extends AppCompatActivity {
                             if (s.equals("null")) {
                                 reference.child(user).child("password").setValue(pass);
                                 reference.child(user).child("showName").setValue(show);
+                                reference.child(user).child("admin").setValue("0");
                                 Toast.makeText(Register.this, "Registration successful!", Toast.LENGTH_LONG).show();
                             } else {
                                 try {
                                     JSONObject obj = new JSONObject(s);
 
+                                    /* Set User values in Firebase. */
                                     if (!obj.has(user)) {
                                         reference.child(user).child("password").setValue(pass);
                                         reference.child(user).child("showName").setValue(show);
+                                        reference.child(user).child("admin").setValue("0");
+                                        reference.child(user).child("blocked").setValue("0");
+
                                         Toast.makeText(Register.this, "Registration successful!", Toast.LENGTH_LONG).show();
                                         Intent i = new Intent(Register.this, Login.class);
                                         finish();

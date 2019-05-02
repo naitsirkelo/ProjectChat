@@ -98,7 +98,7 @@ public class Users extends AppCompatActivity {
 
     /* Setting list and info visibility. */
     private void showUI() {
-        if (al.size() < 2) {
+        if (al.size() < 1) {
             noUsersText.setText(Utility.languageSwitch(getString(R.string.no_chat_info), getString(R.string.no_chat_info_1)));
         } else {
             noUsersText.setText(Utility.languageSwitch(getString(R.string.chat_info), getString(R.string.chat_info_1)));

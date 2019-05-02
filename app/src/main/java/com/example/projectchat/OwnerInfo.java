@@ -55,7 +55,11 @@ public class OwnerInfo extends AppCompatActivity {
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                updateInfo(phoneInput.getText().toString(), emailInput.getText().toString());
+                if (UserDetails.admin == 1 && UserDetails.roomId.equals(UserDetails.adminRoom)) {
+                    updateInfo(phoneInput.getText().toString(), emailInput.getText().toString());
+                } else {
+                    Toast.makeText(OwnerInfo.this, Utility.languageSwitch("Only an admin can update info.", "Kun administrator kan endre."), Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -66,9 +70,6 @@ public class OwnerInfo extends AppCompatActivity {
     }
 
     private void downloadInfo() {
-
-
-
         String url = "https://projectchat-bf300.firebaseio.com/rooms/" + UserDetails.roomId + "/owner.json";
         final ProgressDialog pd = new ProgressDialog(OwnerInfo.this);
         pd.setMessage("Downloading info...");
@@ -141,13 +142,11 @@ public class OwnerInfo extends AppCompatActivity {
                 clearButton.setText(R.string.owner_clear_text);
                 break;
             case "Norsk":
-                saveButton.setText("Large Info");
+                saveButton.setText("Lagre Info");
                 clearButton.setText(R.string.owner_clear_text_1);
                 break;
             default:
                 break;
         }
     }
-
-
 }

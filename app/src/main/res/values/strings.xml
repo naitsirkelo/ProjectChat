@@ -35,9 +35,6 @@
     <string name="radio_private_eng">For me</string>
     <string name="radio_private_nor">For meg</string>
 
-
-
-
     <!-- Search -->
     <string name="app_label">Co-Living"</string>
     <string name="search_hint">What are you looking for?"</string>
@@ -90,6 +87,12 @@
     <string name="no_chat_info_1">Ingen andre brukere i rommet enda..</string>
     <string name="chat_info">Click a username to begin chatting with them.</string>
     <string name="chat_info_1">Trykk på et brukernavn for å begynne og skrive.</string>
+
+    <!-- Admin -->
+    <string name="content_admin_info">As an admin you can give another user the admin privileges if you are leaving the room or kick out users.</string>
+    <string name="content_admin_info_1">Som administrator kan du gi privilegiene videre til en annen bruker eller sparke ut brukere av rommet.</string>
+    <string name="remove_user_info">WARNING: Clicking on a username will block them from the room.</string>
+    <string name="remove_user_info_1">ADVARSEL: Trykk på et brukernavn for å blokkere brukeren fra rommet.</string>
 
     <!-- General settings -->
     <string name="pref_header_general">General</string>

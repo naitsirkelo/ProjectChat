@@ -108,10 +108,10 @@ public class Events extends AppCompatActivity {
                         JSONObject json = new JSONObject(s);
 
                         /* Loop through objects in the events.json folder. */
-                        Iterator<?> keys = json.keys();
+                        Iterator<?> iterator = json.keys();
 
-                        while (keys.hasNext()) {
-                            String key = (String) keys.next();
+                        while (iterator.hasNext()) {
+                            String key = (String) iterator.next();
                             JSONObject obj = json.getJSONObject(key);
 
                             boolean ownEvent = false;

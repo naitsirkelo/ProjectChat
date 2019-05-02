@@ -1,5 +1,6 @@
 package com.example.projectchat;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -7,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -16,6 +18,7 @@ public class PreferencesCustom extends AppCompatActivity {
     Spinner langSpinner;
     String[] languages;
     TextView preferenceText;
+    Button adminButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,5 +66,19 @@ public class PreferencesCustom extends AppCompatActivity {
         /* Set language based on Userdetails. */
         preferenceText = findViewById(R.id.preferenceInfo);
         preferenceText.setText(Utility.languageSwitch(getString(R.string.content_pref_info), getString(R.string.content_pref_info_1)));
+
+        adminButton = findViewById(R.id.adminButton);
+        adminButton.setText(Utility.languageSwitch("Admin Page", "Administratorside"));
+        adminButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                startActivity(new Intent(PreferencesCustom.this, Admin.class));
+            }
+        });
+
+        if (UserDetails.admin == 1 && UserDetails.roomId.equals(UserDetails.adminRoom)) {
+            adminButton.setVisibility(View.VISIBLE);
+        } else {
+            adminButton.setVisibility(View.GONE);
+        }
     }
 }

@@ -92,6 +92,8 @@ public class Room extends AppCompatActivity {
                                         UserDetails.roomId = id;
                                         Utility.savePreference_1(Room.this, "Login", "storedRoom", UserDetails.roomId);
 
+                                        checkAdmin(id);
+
                                         startActivity(new Intent(Room.this, MainActivity.class));
                                         finish();
                                         overridePendingTransition(R.anim.fadein, R.anim.fadeout);
@@ -141,6 +143,35 @@ public class Room extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void checkAdmin(final String room) {
+        String url = "https://projectchat-bf300.firebaseio.com/users.json";
+        StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String s) {
+                try {
+                    JSONObject obj = new JSONObject(s);
+
+                    /* If the user is the admin of the current room joined. */
+                    if (obj.getJSONObject(UserDetails.username).getString("admin").equals(room)) {
+
+                        UserDetails.admin = 1;
+                        UserDetails.adminRoom = room;
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                System.out.println("" + volleyError);
+            }
+        });
+
+        RequestQueue rQueue = Volley.newRequestQueue(Room.this);
+        rQueue.add(request);
     }
 
     /* Update text boxes based on user settings. */

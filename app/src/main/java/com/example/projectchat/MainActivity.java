@@ -487,6 +487,10 @@ public class MainActivity extends AppCompatActivity
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
+                    /* Reset admin settings. */
+                    UserDetails.admin = 0;
+                    UserDetails.adminRoom = "0";
+
                     startActivity(new Intent(MainActivity.this, Login.class));
                     finish();
                     overridePendingTransition(R.anim.fadein, R.anim.fadeout);

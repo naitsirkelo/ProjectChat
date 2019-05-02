@@ -27,6 +27,7 @@ public class CreateRoom extends AppCompatActivity {
     Button registerButton;
     String id;
     TextView login;
+    Firebase reference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,13 +66,13 @@ public class CreateRoom extends AppCompatActivity {
                     final ProgressDialog pd = new ProgressDialog(CreateRoom.this);
                     pd.setMessage("Storing room...");
                     pd.show();
-                    
+
                     String url = "https://projectchat-bf300.firebaseio.com/rooms.json";
 
                     StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
                         @Override
                         public void onResponse(String s) {
-                            Firebase reference = new Firebase("https://projectchat-bf300.firebaseio.com/rooms");
+                            reference = new Firebase("https://projectchat-bf300.firebaseio.com/rooms");
 
                             if (s.equals("null")) {
                                 reference.child(id).child("id").setValue(id);
@@ -84,8 +85,9 @@ public class CreateRoom extends AppCompatActivity {
                                         reference.child(id).child("id").setValue(id);
                                         Toast.makeText(CreateRoom.this, "Created successfully.", Toast.LENGTH_LONG).show();
 
-                                        UserDetails.admin = 1;
-                                        UserDetails.adminRoom = id;
+                                        /* Set user as admin of the room created. */
+                                        reference = new Firebase("https://projectchat-bf300.firebaseio.com/users");
+                                        reference.child(UserDetails.username).child("admin").setValue(id);
 
                                         Intent i = new Intent(CreateRoom.this, Room.class);
                                         startActivity(i);
@@ -113,3 +115,4 @@ public class CreateRoom extends AppCompatActivity {
         });
     }
 }
+

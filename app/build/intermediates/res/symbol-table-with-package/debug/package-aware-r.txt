@@ -1154,6 +1154,8 @@ id add
 id addRule
 id adjust_height
 id adjust_width
+id adminButton
+id adminInfo
 id alertTitle
 id all
 id always
@@ -1163,6 +1165,7 @@ id async
 id auto
 id avatarImageView
 id backButton
+id backButtonAdmin
 id backButtonPref
 id barrier
 id beginning
@@ -1457,6 +1460,7 @@ layout abc_search_view
 layout abc_select_dialog_material
 layout abc_tooltip
 layout activity_add_item_shop
+layout activity_admin
 layout activity_chat
 layout activity_create_event
 layout activity_create_room
@@ -1475,6 +1479,7 @@ layout activity_user
 layout activity_webpage
 layout app_bar_main
 layout content_add_item
+layout content_admin
 layout content_create_event
 layout content_create_rule
 layout content_create_task
@@ -1597,6 +1602,8 @@ string common_google_play_services_wear_update_text
 string common_open_on_phone
 string common_signin_button_text
 string common_signin_button_text_long
+string content_admin_info
+string content_admin_info_1
 string content_events_info
 string content_events_info_1
 string content_main_info
@@ -1670,6 +1677,8 @@ string radio_private_eng
 string radio_private_nor
 string register_user_info
 string register_user_info_1
+string remove_user_info
+string remove_user_info_1
 string search_hint
 string search_menu_title
 string status_bar_notification_info_overflow

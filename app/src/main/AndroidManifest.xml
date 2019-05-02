@@ -18,7 +18,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".AddItemShop"></activity>
+        <activity android:name=".Admin"></activity>
+        <activity android:name=".AddItemShop" />
         <activity android:name=".CreateEvent" />
         <activity
             android:name=".Events"
