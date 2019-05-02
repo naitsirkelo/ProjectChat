@@ -22,16 +22,15 @@ import java.util.Map;
 
 public class Shop extends AppCompatActivity {
 
+    private static final int REQUEST_NEW_ITEM = 1;
     Toolbar toolbar;
     CollapsingToolbarLayout tbLayout;
     TextView infoText;
     Firebase reference;
-    private static final int REQUEST_NEW_ITEM = 1;
     FloatingActionButton newItem, removeItem;
-    String removeText = "Delete";
     LinearLayout layoutShop;
     ScrollView scrollViewShop;
-    int keyLength = 10, totalItems = 0;
+    int totalItems = 0;
 
 
     @Override
@@ -55,6 +54,17 @@ public class Shop extends AppCompatActivity {
 
         infoText = findViewById(R.id.shopInfo);
         setLanguage(UserDetails.language);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_NEW_ITEM && resultCode == RESULT_OK) {
+            if (data != null && data.getExtras() != null) {
+                String forWho = data.getStringExtra("forWho");
+                String itemName = data.getStringExtra("itemName");
+                addItem(itemName, forWho);
+            }
+        }
     }
 
     /* Update text boxes based on user settings. */
@@ -81,8 +91,6 @@ public class Shop extends AppCompatActivity {
         final TextView textItem = new TextView(Shop.this);
         final Button removeButton = new Button(Shop.this);
 
-        removeButton.setText(removeText);
-
         textItem.setText(itemName);
         textItem.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
 
@@ -96,6 +104,7 @@ public class Shop extends AppCompatActivity {
         removeButton.setLayoutParams(lp2);
 
         /* Defining behaviour of button to remove items. */
+        removeButton.setText(Utility.languageSwitch(Utility.removeTextEng, Utility.removeTextNor));
         removeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -155,18 +164,6 @@ public class Shop extends AppCompatActivity {
         }
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_NEW_ITEM) {
-            if (resultCode == RESULT_OK) {
-                if (data != null && data.getExtras() != null) {
-                    String forWho = data.getStringExtra("forWho");
-                    String itemName = data.getStringExtra("itemName");
-                    addItem(itemName, forWho);
-                }
-            }
-        }
-    }
 
     private void showInfo(int n) {
         if (n > 0) {

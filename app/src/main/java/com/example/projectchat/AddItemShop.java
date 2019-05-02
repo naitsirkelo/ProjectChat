@@ -44,7 +44,7 @@ public class AddItemShop extends AppCompatActivity {
             public void onClick(View view) {
                 String item = itemName.getText().toString();
                 String forWho = "";
-                // Check which radio button was clicked
+                /* Check which radio button was clicked. */
                 switch(itemForWho.getCheckedRadioButtonId()) {
                     case R.id.radio_private:
                         forWho = UserDetails.username;
@@ -54,14 +54,14 @@ public class AddItemShop extends AppCompatActivity {
                         break;
                 }
 
-                if (!itemName.getText().toString().equals("")) {
+                if (!item.equals("")) {
                     Intent back = new Intent(AddItemShop.this, Shop.class);
                     back.putExtra("forWho", forWho);
                     back.putExtra("itemName", item);
                     setResult(RESULT_OK, back);
                     finish();
                 } else {
-                    Toast.makeText(AddItemShop.this, "Please enter item name", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddItemShop.this, "Please enter an item name..", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -76,12 +76,10 @@ public class AddItemShop extends AppCompatActivity {
         }
         switch (l) {
             case "English":
-                itemName.setHint(R.string.placeholder_item_eng);
                 radioCommon.setText(R.string.radio_common_eng);
                 radioPrivate.setText(R.string.radio_private_eng);
                 break;
             case "Norsk":
-                itemName.setHint(R.string.placeholder_item_nor);
                 radioCommon.setText(R.string.radio_common_nor);
                 radioPrivate.setText(R.string.radio_private_nor);
                 break;
