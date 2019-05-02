@@ -85,20 +85,20 @@ public class Register extends AppCompatActivity {
                             Firebase reference = new Firebase("https://projectchat-bf300.firebaseio.com/users");
 
                             if (s.equals("null")) {
+                                /* First member in database. */
                                 reference.child(user).child("password").setValue(pass);
                                 reference.child(user).child("showName").setValue(show);
-                                reference.child(user).child("admin").setValue("0");
+                                reference.child(user).child("room").setValue("0");
                                 Toast.makeText(Register.this, "Registration successful!", Toast.LENGTH_LONG).show();
                             } else {
                                 try {
                                     JSONObject obj = new JSONObject(s);
 
-                                    /* Set User values in Firebase. */
+                                    /* Set user values in Firebase. */
                                     if (!obj.has(user)) {
                                         reference.child(user).child("password").setValue(pass);
                                         reference.child(user).child("showName").setValue(show);
-                                        reference.child(user).child("admin").setValue("0");
-                                        reference.child(user).child("blocked").setValue("0");
+                                        reference.child(user).child("room").setValue("0");
 
                                         Toast.makeText(Register.this, "Registration successful!", Toast.LENGTH_LONG).show();
                                         Intent i = new Intent(Register.this, Login.class);

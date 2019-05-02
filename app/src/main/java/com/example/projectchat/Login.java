@@ -89,7 +89,6 @@ public class Login extends AppCompatActivity {
                                                 "storedPass", UserDetails.password);
 
                                         startActivity(new Intent(Login.this, Room.class));
-                                        finish();
                                         overridePendingTransition(R.anim.fadein, R.anim.fadeout);
                                     } else {
                                         Toast.makeText(Login.this, "Incorrect password.", Toast.LENGTH_LONG).show();

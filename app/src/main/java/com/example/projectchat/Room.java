@@ -23,6 +23,8 @@ import com.firebase.client.Firebase;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Iterator;
+
 public class Room extends AppCompatActivity {
     TextView createRoom, backToLogin;
     EditText roomId;
@@ -71,6 +73,7 @@ public class Room extends AppCompatActivity {
                 if (id.equals("")) {
                     roomId.setError("Room ID is required.");
                 } else {
+
                     String url = "https://projectchat-bf300.firebaseio.com/rooms.json";
                     final ProgressDialog pd = new ProgressDialog(Room.this);
                     pd.setMessage("Joining room...");
@@ -88,15 +91,18 @@ public class Room extends AppCompatActivity {
                                     if (!obj.has(id)) {
                                         Toast.makeText(Room.this, "Room not found.", Toast.LENGTH_LONG).show();
                                     } else if (obj.getJSONObject(id).getString("id").equals(id)) {
-
                                         UserDetails.roomId = id;
                                         Utility.savePreference_1(Room.this, "Login", "storedRoom", UserDetails.roomId);
 
                                         checkAdmin(id);
+                                        setRoomId();
 
                                         startActivity(new Intent(Room.this, MainActivity.class));
                                         finish();
                                         overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+
+                                        /* Check if user is blocked from the room. */
+                                        //checkUserBlocked();
                                     } else {
                                         Toast.makeText(Room.this, "Incorrect Room ID.", Toast.LENGTH_LONG).show();
                                     }
@@ -118,35 +124,13 @@ public class Room extends AppCompatActivity {
                     RequestQueue rQueue = Volley.newRequestQueue(Room.this);
                     rQueue.add(request);
 
-
-                    url = "https://projectchat-bf300.firebaseio.com/users/" + UserDetails.username + ".json";
-
-                    request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
-                        @Override
-                        public void onResponse(String s) {
-                            Firebase reference = new Firebase("https://projectchat-bf300.firebaseio.com/users/" + UserDetails.username);
-
-                            /* Update stored room ID on user. */
-                            reference.child("room").setValue(UserDetails.roomId);
-                        }
-
-                    }, new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError volleyError) {
-                            System.out.println("" + volleyError);
-
-                        }
-                    });
-
-                    rQueue = Volley.newRequestQueue(Room.this);
-                    rQueue.add(request);
                 }
             }
         });
     }
 
     private void checkAdmin(final String room) {
-        String url = "https://projectchat-bf300.firebaseio.com/users.json";
+        String url = "https://projectchat-bf300.firebaseio.com/rooms/" + room + ".json";
         StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String s) {
@@ -154,7 +138,7 @@ public class Room extends AppCompatActivity {
                     JSONObject obj = new JSONObject(s);
 
                     /* If the user is the admin of the current room joined. */
-                    if (obj.getJSONObject(UserDetails.username).getString("admin").equals(room)) {
+                    if (obj.getString("admin").equals(UserDetails.username)) {
 
                         UserDetails.admin = 1;
                         UserDetails.adminRoom = room;
@@ -169,9 +153,92 @@ public class Room extends AppCompatActivity {
                 System.out.println("" + volleyError);
             }
         });
-
         RequestQueue rQueue = Volley.newRequestQueue(Room.this);
         rQueue.add(request);
+    }
+
+    private void setRoomId() {
+        String url = "https://projectchat-bf300.firebaseio.com/users/" + UserDetails.username + ".json";
+
+        StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String s) {
+                Firebase reference = new Firebase("https://projectchat-bf300.firebaseio.com/users/" + UserDetails.username);
+
+                /* Update stored room ID on user. */
+                reference.child("room").setValue(UserDetails.roomId);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                System.out.println("" + volleyError);
+
+            }
+        });
+        RequestQueue rQueue = Volley.newRequestQueue(Room.this);
+        rQueue.add(request);
+    }
+
+    /*
+    Future implementation: Prevent user from joining blocked rooms.
+     */
+    private void checkUserBlocked() {
+        String url = "https://projectchat-bf300.firebaseio.com/rooms/" + UserDetails.roomId + "/blockedList.json";
+
+        StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String s) {
+                if (s.equals("null")) {
+                    /* No users blocked. */
+                    completeLogin();
+                } else {
+                    try {
+                        JSONObject json = new JSONObject(s);
+
+                        /* Loop through users in the blocked-users list. */
+                        Iterator keys = json.keys();
+
+                        boolean stopLogin = false;
+                        while (keys.hasNext()) {
+                            String key = keys.next().toString();
+                            JSONObject obj = json.getJSONObject(key);
+
+                            /* Check if joining room should be prevented. */
+                            String blocked = obj.getString("blocked");
+                            if (blocked.equals(UserDetails.username)) {
+                                stopLogin = true;
+                                preventLogin();
+                                break;
+                            }
+                        }
+                        /* Complete login. */
+                        if (!stopLogin) {
+                            completeLogin();
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                System.out.println("" + volleyError);
+            }
+        });
+        RequestQueue rQueue = Volley.newRequestQueue(Room.this);
+        rQueue.add(request);
+    }
+
+    private void completeLogin() {
+        startActivity(new Intent(Room.this, MainActivity.class));
+        finish();
+        overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+    }
+
+    private void preventLogin() {
+        Toast.makeText(Room.this, Utility.languageSwitch("You are blocked from this room.", "Du er blokkert fra dette rommet."), Toast.LENGTH_LONG).show();
+        roomId.setText("");
     }
 
     /* Update text boxes based on user settings. */

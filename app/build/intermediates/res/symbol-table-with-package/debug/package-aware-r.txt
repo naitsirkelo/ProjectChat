@@ -1156,6 +1156,7 @@ id adjust_height
 id adjust_width
 id adminButton
 id adminInfo
+id adminInfo_2
 id alertTitle
 id all
 id always
@@ -1404,6 +1405,7 @@ id up
 id useLogo
 id usernameTextView
 id usersList
+id usersList_2
 id view_offset_helper
 id visible
 id webView1

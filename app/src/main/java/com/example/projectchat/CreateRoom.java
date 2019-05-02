@@ -76,6 +76,7 @@ public class CreateRoom extends AppCompatActivity {
 
                             if (s.equals("null")) {
                                 reference.child(id).child("id").setValue(id);
+                                reference.child(id).child("admin").setValue(UserDetails.username);
                                 Toast.makeText(CreateRoom.this, "Registration successful!", Toast.LENGTH_LONG).show();
                             } else {
                                 try {
@@ -83,11 +84,8 @@ public class CreateRoom extends AppCompatActivity {
 
                                     if (!obj.has(id)) {
                                         reference.child(id).child("id").setValue(id);
+                                        reference.child(id).child("admin").setValue(UserDetails.username);
                                         Toast.makeText(CreateRoom.this, "Created successfully.", Toast.LENGTH_LONG).show();
-
-                                        /* Set user as admin of the room created. */
-                                        reference = new Firebase("https://projectchat-bf300.firebaseio.com/users");
-                                        reference.child(UserDetails.username).child("admin").setValue(id);
 
                                         Intent i = new Intent(CreateRoom.this, Room.class);
                                         startActivity(i);

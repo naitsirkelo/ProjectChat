@@ -1,4 +1,4 @@
-#Thu May 02 15:47:44 CEST 2019
+#Thu May 02 19:50:56 CEST 2019
 base.0=/Users/oleklarsen/AndroidStudioProjects/ProjectChat/app/build/intermediates/dex/debug/mergeDexDebug/out
 path.0=classes.dex
 renamed.0=classes.dex

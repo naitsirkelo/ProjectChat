@@ -1,19 +1,19 @@
 [
     {
-        "merged": "/Users/oleklarsen/AndroidStudioProjects/ProjectChat/app/build/intermediates/res/merged/debug/drawable-xxhdpi-v4_abc_scrubber_control_to_pressed_mtrl_005.png.flat",
-        "source": "/Users/oleklarsen/.gradle/caches/transforms-1/files-1.1/appcompat-v7-28.0.0.aar/9ca0db21714c40141e6752cb856e94eb/res/drawable-xxhdpi-v4/abc_scrubber_control_to_pressed_mtrl_005.png"
-    },
-    {
         "merged": "/Users/oleklarsen/AndroidStudioProjects/ProjectChat/app/build/intermediates/res/merged/debug/drawable-v21_ic_menu_manage.xml.flat",
         "source": "/Users/oleklarsen/AndroidStudioProjects/ProjectChat/app/src/main/res/drawable-v21/ic_menu_manage.xml"
     },
     {
-        "merged": "/Users/oleklarsen/AndroidStudioProjects/ProjectChat/app/build/intermediates/res/merged/debug/drawable-v24_ic_launcher_foreground.xml.flat",
-        "source": "/Users/oleklarsen/AndroidStudioProjects/ProjectChat/app/src/main/res/drawable-v24/ic_launcher_foreground.xml"
+        "merged": "/Users/oleklarsen/AndroidStudioProjects/ProjectChat/app/build/intermediates/res/merged/debug/drawable-xxhdpi-v4_abc_scrubber_control_to_pressed_mtrl_005.png.flat",
+        "source": "/Users/oleklarsen/.gradle/caches/transforms-1/files-1.1/appcompat-v7-28.0.0.aar/9ca0db21714c40141e6752cb856e94eb/res/drawable-xxhdpi-v4/abc_scrubber_control_to_pressed_mtrl_005.png"
     },
     {
         "merged": "/Users/oleklarsen/AndroidStudioProjects/ProjectChat/app/build/intermediates/res/merged/debug/drawable-mdpi-v4_abc_scrubber_control_to_pressed_mtrl_000.png.flat",
         "source": "/Users/oleklarsen/.gradle/caches/transforms-1/files-1.1/appcompat-v7-28.0.0.aar/9ca0db21714c40141e6752cb856e94eb/res/drawable-mdpi-v4/abc_scrubber_control_to_pressed_mtrl_000.png"
+    },
+    {
+        "merged": "/Users/oleklarsen/AndroidStudioProjects/ProjectChat/app/build/intermediates/res/merged/debug/drawable-v24_ic_launcher_foreground.xml.flat",
+        "source": "/Users/oleklarsen/AndroidStudioProjects/ProjectChat/app/src/main/res/drawable-v24/ic_launcher_foreground.xml"
     },
     {
         "merged": "/Users/oleklarsen/AndroidStudioProjects/ProjectChat/app/build/intermediates/res/merged/debug/drawable-xxxhdpi-v4_abc_btn_check_to_on_mtrl_015.png.flat",
@@ -44,12 +44,12 @@
         "source": "/Users/oleklarsen/.gradle/caches/transforms-1/files-1.1/appcompat-v7-28.0.0.aar/9ca0db21714c40141e6752cb856e94eb/res/color-v23/abc_tint_seek_thumb.xml"
     },
     {
-        "merged": "/Users/oleklarsen/AndroidStudioProjects/ProjectChat/app/build/intermediates/res/merged/debug/drawable-ldrtl-xhdpi-v17_abc_ic_menu_copy_mtrl_am_alpha.png.flat",
-        "source": "/Users/oleklarsen/.gradle/caches/transforms-1/files-1.1/appcompat-v7-28.0.0.aar/9ca0db21714c40141e6752cb856e94eb/res/drawable-ldrtl-xhdpi-v17/abc_ic_menu_copy_mtrl_am_alpha.png"
-    },
-    {
         "merged": "/Users/oleklarsen/AndroidStudioProjects/ProjectChat/app/build/intermediates/res/merged/debug/drawable-v21_avd_hide_password.xml.flat",
         "source": "/Users/oleklarsen/.gradle/caches/transforms-1/files-1.1/design-28.0.0.aar/fb30e0acdae16abe62905ecdedd0ddee/res/drawable-v21/avd_hide_password.xml"
+    },
+    {
+        "merged": "/Users/oleklarsen/AndroidStudioProjects/ProjectChat/app/build/intermediates/res/merged/debug/drawable-ldrtl-xhdpi-v17_abc_ic_menu_copy_mtrl_am_alpha.png.flat",
+        "source": "/Users/oleklarsen/.gradle/caches/transforms-1/files-1.1/appcompat-v7-28.0.0.aar/9ca0db21714c40141e6752cb856e94eb/res/drawable-ldrtl-xhdpi-v17/abc_ic_menu_copy_mtrl_am_alpha.png"
     },
     {
         "merged": "/Users/oleklarsen/AndroidStudioProjects/ProjectChat/app/build/intermediates/res/merged/debug/drawable-xxxhdpi-v4_abc_btn_switch_to_on_mtrl_00012.9.png.flat",
@@ -172,20 +172,20 @@
         "source": "/Users/oleklarsen/AndroidStudioProjects/ProjectChat/app/src/main/res/drawable/ic_owner.png"
     },
     {
-        "merged": "/Users/oleklarsen/AndroidStudioProjects/ProjectChat/app/build/intermediates/res/merged/debug/color_abc_secondary_text_material_light.xml.flat",
-        "source": "/Users/oleklarsen/.gradle/caches/transforms-1/files-1.1/appcompat-v7-28.0.0.aar/9ca0db21714c40141e6752cb856e94eb/res/color/abc_secondary_text_material_light.xml"
-    },
-    {
-        "merged": "/Users/oleklarsen/AndroidStudioProjects/ProjectChat/app/build/intermediates/res/merged/debug/drawable-xhdpi-v4_notify_panel_notification_icon_bg.png.flat",
-        "source": "/Users/oleklarsen/.gradle/caches/transforms-1/files-1.1/support-compat-28.0.0.aar/18e3717ddb8c1e981788f06cd8e58926/res/drawable-xhdpi-v4/notify_panel_notification_icon_bg.png"
+        "merged": "/Users/oleklarsen/AndroidStudioProjects/ProjectChat/app/build/intermediates/res/merged/debug/drawable-xhdpi-v4_common_google_signin_btn_text_dark_normal_background.9.png.flat",
+        "source": "/Users/oleklarsen/.gradle/caches/transforms-1/files-1.1/play-services-base-16.0.1.aar/f93d8be3a2f36402bec40f23350116de/res/drawable-xhdpi-v4/common_google_signin_btn_text_dark_normal_background.9.png"
     },
     {
         "merged": "/Users/oleklarsen/AndroidStudioProjects/ProjectChat/app/build/intermediates/res/merged/debug/layout_activity_main.xml.flat",
         "source": "/Users/oleklarsen/AndroidStudioProjects/ProjectChat/app/src/main/res/layout/activity_main.xml"
     },
     {
-        "merged": "/Users/oleklarsen/AndroidStudioProjects/ProjectChat/app/build/intermediates/res/merged/debug/drawable-xhdpi-v4_common_google_signin_btn_text_dark_normal_background.9.png.flat",
-        "source": "/Users/oleklarsen/.gradle/caches/transforms-1/files-1.1/play-services-base-16.0.1.aar/f93d8be3a2f36402bec40f23350116de/res/drawable-xhdpi-v4/common_google_signin_btn_text_dark_normal_background.9.png"
+        "merged": "/Users/oleklarsen/AndroidStudioProjects/ProjectChat/app/build/intermediates/res/merged/debug/drawable-xhdpi-v4_notify_panel_notification_icon_bg.png.flat",
+        "source": "/Users/oleklarsen/.gradle/caches/transforms-1/files-1.1/support-compat-28.0.0.aar/18e3717ddb8c1e981788f06cd8e58926/res/drawable-xhdpi-v4/notify_panel_notification_icon_bg.png"
+    },
+    {
+        "merged": "/Users/oleklarsen/AndroidStudioProjects/ProjectChat/app/build/intermediates/res/merged/debug/color_abc_secondary_text_material_light.xml.flat",
+        "source": "/Users/oleklarsen/.gradle/caches/transforms-1/files-1.1/appcompat-v7-28.0.0.aar/9ca0db21714c40141e6752cb856e94eb/res/color/abc_secondary_text_material_light.xml"
     },
     {
         "merged": "/Users/oleklarsen/AndroidStudioProjects/ProjectChat/app/build/intermediates/res/merged/debug/drawable_abc_ic_clear_material.xml.flat",
@@ -280,12 +280,12 @@
         "source": "/Users/oleklarsen/.gradle/caches/transforms-1/files-1.1/design-28.0.0.aar/fb30e0acdae16abe62905ecdedd0ddee/res/interpolator/mtrl_fast_out_linear_in.xml"
     },
     {
-        "merged": "/Users/oleklarsen/AndroidStudioProjects/ProjectChat/app/build/intermediates/res/merged/debug/drawable-hdpi-v4_abc_textfield_activated_mtrl_alpha.9.png.flat",
-        "source": "/Users/oleklarsen/.gradle/caches/transforms-1/files-1.1/appcompat-v7-28.0.0.aar/9ca0db21714c40141e6752cb856e94eb/res/drawable-hdpi-v4/abc_textfield_activated_mtrl_alpha.9.png"
-    },
-    {
         "merged": "/Users/oleklarsen/AndroidStudioProjects/ProjectChat/app/build/intermediates/res/merged/debug/drawable-xxhdpi-v4_abc_ic_menu_selectall_mtrl_alpha.png.flat",
         "source": "/Users/oleklarsen/.gradle/caches/transforms-1/files-1.1/appcompat-v7-28.0.0.aar/9ca0db21714c40141e6752cb856e94eb/res/drawable-xxhdpi-v4/abc_ic_menu_selectall_mtrl_alpha.png"
+    },
+    {
+        "merged": "/Users/oleklarsen/AndroidStudioProjects/ProjectChat/app/build/intermediates/res/merged/debug/drawable-hdpi-v4_abc_textfield_activated_mtrl_alpha.9.png.flat",
+        "source": "/Users/oleklarsen/.gradle/caches/transforms-1/files-1.1/appcompat-v7-28.0.0.aar/9ca0db21714c40141e6752cb856e94eb/res/drawable-hdpi-v4/abc_textfield_activated_mtrl_alpha.9.png"
     },
     {
         "merged": "/Users/oleklarsen/AndroidStudioProjects/ProjectChat/app/build/intermediates/res/merged/debug/drawable-hdpi-v4_abc_textfield_default_mtrl_alpha.9.png.flat",
@@ -340,12 +340,12 @@
         "source": "/Users/oleklarsen/.gradle/caches/transforms-1/files-1.1/appcompat-v7-28.0.0.aar/9ca0db21714c40141e6752cb856e94eb/res/drawable-mdpi-v4/abc_ic_star_black_48dp.png"
     },
     {
-        "merged": "/Users/oleklarsen/AndroidStudioProjects/ProjectChat/app/build/intermediates/res/merged/debug/drawable-xhdpi-v4_abc_ab_share_pack_mtrl_alpha.9.png.flat",
-        "source": "/Users/oleklarsen/.gradle/caches/transforms-1/files-1.1/appcompat-v7-28.0.0.aar/9ca0db21714c40141e6752cb856e94eb/res/drawable-xhdpi-v4/abc_ab_share_pack_mtrl_alpha.9.png"
-    },
-    {
         "merged": "/Users/oleklarsen/AndroidStudioProjects/ProjectChat/app/build/intermediates/res/merged/debug/drawable-mdpi-v4_abc_btn_switch_to_on_mtrl_00001.9.png.flat",
         "source": "/Users/oleklarsen/.gradle/caches/transforms-1/files-1.1/appcompat-v7-28.0.0.aar/9ca0db21714c40141e6752cb856e94eb/res/drawable-mdpi-v4/abc_btn_switch_to_on_mtrl_00001.9.png"
+    },
+    {
+        "merged": "/Users/oleklarsen/AndroidStudioProjects/ProjectChat/app/build/intermediates/res/merged/debug/drawable-xhdpi-v4_abc_ab_share_pack_mtrl_alpha.9.png.flat",
+        "source": "/Users/oleklarsen/.gradle/caches/transforms-1/files-1.1/appcompat-v7-28.0.0.aar/9ca0db21714c40141e6752cb856e94eb/res/drawable-xhdpi-v4/abc_ab_share_pack_mtrl_alpha.9.png"
     },
     {
         "merged": "/Users/oleklarsen/AndroidStudioProjects/ProjectChat/app/build/intermediates/res/merged/debug/drawable-hdpi-v4_abc_btn_check_to_on_mtrl_000.png.flat",
@@ -380,12 +380,12 @@
         "source": "/Users/oleklarsen/AndroidStudioProjects/ProjectChat/app/src/main/res/menu/main.xml"
     },
     {
-        "merged": "/Users/oleklarsen/AndroidStudioProjects/ProjectChat/app/build/intermediates/res/merged/debug/drawable_common_google_signin_btn_text_disabled.xml.flat",
-        "source": "/Users/oleklarsen/.gradle/caches/transforms-1/files-1.1/play-services-base-16.0.1.aar/f93d8be3a2f36402bec40f23350116de/res/drawable/common_google_signin_btn_text_disabled.xml"
-    },
-    {
         "merged": "/Users/oleklarsen/AndroidStudioProjects/ProjectChat/app/build/intermediates/res/merged/debug/drawable-ldrtl-mdpi-v17_abc_spinner_mtrl_am_alpha.9.png.flat",
         "source": "/Users/oleklarsen/.gradle/caches/transforms-1/files-1.1/appcompat-v7-28.0.0.aar/9ca0db21714c40141e6752cb856e94eb/res/drawable-ldrtl-mdpi-v17/abc_spinner_mtrl_am_alpha.9.png"
+    },
+    {
+        "merged": "/Users/oleklarsen/AndroidStudioProjects/ProjectChat/app/build/intermediates/res/merged/debug/drawable_common_google_signin_btn_text_disabled.xml.flat",
+        "source": "/Users/oleklarsen/.gradle/caches/transforms-1/files-1.1/play-services-base-16.0.1.aar/f93d8be3a2f36402bec40f23350116de/res/drawable/common_google_signin_btn_text_disabled.xml"
     },
     {
         "merged": "/Users/oleklarsen/AndroidStudioProjects/ProjectChat/app/build/intermediates/res/merged/debug/color_mtrl_chip_ripple_color.xml.flat",
@@ -440,16 +440,16 @@
         "source": "/Users/oleklarsen/AndroidStudioProjects/ProjectChat/app/src/main/res/drawable/spinner_background.xml"
     },
     {
+        "merged": "/Users/oleklarsen/AndroidStudioProjects/ProjectChat/app/build/intermediates/res/merged/debug/layout_activity_admin.xml.flat",
+        "source": "/Users/oleklarsen/AndroidStudioProjects/ProjectChat/app/src/main/res/layout/activity_admin.xml"
+    },
+    {
         "merged": "/Users/oleklarsen/AndroidStudioProjects/ProjectChat/app/build/intermediates/res/merged/debug/drawable-xxhdpi-v4_abc_textfield_search_activated_mtrl_alpha.9.png.flat",
         "source": "/Users/oleklarsen/.gradle/caches/transforms-1/files-1.1/appcompat-v7-28.0.0.aar/9ca0db21714c40141e6752cb856e94eb/res/drawable-xxhdpi-v4/abc_textfield_search_activated_mtrl_alpha.9.png"
     },
     {
         "merged": "/Users/oleklarsen/AndroidStudioProjects/ProjectChat/app/build/intermediates/res/merged/debug/drawable-xxhdpi-v4_abc_scrubber_control_off_mtrl_alpha.png.flat",
         "source": "/Users/oleklarsen/.gradle/caches/transforms-1/files-1.1/appcompat-v7-28.0.0.aar/9ca0db21714c40141e6752cb856e94eb/res/drawable-xxhdpi-v4/abc_scrubber_control_off_mtrl_alpha.png"
-    },
-    {
-        "merged": "/Users/oleklarsen/AndroidStudioProjects/ProjectChat/app/build/intermediates/res/merged/debug/layout_activity_admin.xml.flat",
-        "source": "/Users/oleklarsen/AndroidStudioProjects/ProjectChat/app/src/main/res/layout/activity_admin.xml"
     },
     {
         "merged": "/Users/oleklarsen/AndroidStudioProjects/ProjectChat/app/build/intermediates/res/merged/debug/drawable-mdpi-v4_abc_scrubber_control_off_mtrl_alpha.png.flat",

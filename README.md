@@ -29,7 +29,7 @@ Log in:
 Enter your recently created account name and password, followed by "login".
 
 Joining a room:
-If no one has already created a room, press "create here". Otherwise enter the households existing room id. 
+If no one has already created a room, press "create here". Otherwise enter the households existing room id.
 Enter your desired room id in the text field. Press "create room". Now enter the recently created room id and press "join".
 
 Creating tasks:
@@ -72,6 +72,8 @@ The list below will explain how the data is structured in Firebase. No data will
 - rooms:
     - id: Minimum 6 letters/numbers
         - events
+        - admin (user id)
+        - blockedList (user id(s))
         - owner (Email + phone)
         - rules (Created house rules, by users)
             - rule (id), user (who submitted), hidden (0/1)
@@ -88,7 +90,7 @@ The list below will explain how the data is structured in Firebase. No data will
 
 ## Installation
 
-Clone the repo and install app by building it through Android Studio, either to an emulator or physical device. Connection to firebase database is automatic. 
+Clone the repo and install app by building it through Android Studio, either to an emulator or physical device. Connection to firebase database is automatic.
 
 ### Tools
 
