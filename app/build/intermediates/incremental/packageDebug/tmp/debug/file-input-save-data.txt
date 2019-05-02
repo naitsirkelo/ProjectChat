@@ -1,5 +1,5 @@
 #Internal package file, do not edit.
-#Thu May 02 13:32:51 CEST 2019
+#Thu May 02 14:10:32 CEST 2019
 0.baseType=DIRECTORY
 0.base=/Users/oleklarsen/AndroidStudioProjects/ProjectChat/app/build/intermediates/dex/debug/mergeDexDebug/out
 0.path=classes.dex

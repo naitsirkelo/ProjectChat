@@ -65,7 +65,7 @@ public class CreateRoom extends AppCompatActivity {
                     final ProgressDialog pd = new ProgressDialog(CreateRoom.this);
                     pd.setMessage("Storing room...");
                     pd.show();
-
+                    
                     String url = "https://projectchat-bf300.firebaseio.com/rooms.json";
 
                     StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
@@ -83,6 +83,10 @@ public class CreateRoom extends AppCompatActivity {
                                     if (!obj.has(id)) {
                                         reference.child(id).child("id").setValue(id);
                                         Toast.makeText(CreateRoom.this, "Created successfully.", Toast.LENGTH_LONG).show();
+
+                                        UserDetails.admin = 1;
+                                        UserDetails.adminRoom = id;
+
                                         Intent i = new Intent(CreateRoom.this, Room.class);
                                         startActivity(i);
                                     } else {

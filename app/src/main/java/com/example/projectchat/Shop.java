@@ -1,5 +1,6 @@
 package com.example.projectchat;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -14,10 +15,21 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.firebase.client.Firebase;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 public class Shop extends AppCompatActivity {
@@ -27,7 +39,6 @@ public class Shop extends AppCompatActivity {
     CollapsingToolbarLayout tbLayout;
     TextView infoText;
     Firebase reference;
-    FloatingActionButton newItem, removeItem;
     LinearLayout layoutShop;
     ScrollView scrollViewShop;
     int totalItems = 0;
@@ -53,6 +64,7 @@ public class Shop extends AppCompatActivity {
         });
 
         infoText = findViewById(R.id.shopInfo);
+        downloadItems();
         setLanguage(UserDetails.language);
     }
 
@@ -62,7 +74,7 @@ public class Shop extends AppCompatActivity {
             if (data != null && data.getExtras() != null) {
                 String forWho = data.getStringExtra("forWho");
                 String itemName = data.getStringExtra("itemName");
-                addItem(itemName, forWho);
+                addItem(itemName, forWho, false);
             }
         }
     }
@@ -86,12 +98,68 @@ public class Shop extends AppCompatActivity {
         }
     }
 
-    private void addItem(final String itemName, final String forWho) {
+    private void downloadItems() {
+        String url = "https://projectchat-bf300.firebaseio.com/rooms/" + UserDetails.roomId + "/shoppingList.json";
+        final ProgressDialog pd = new ProgressDialog(Shop.this);
+        pd.setMessage("Downloading items...");
+        pd.show();
+
+        StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String s) {
+                if (s.equals("null")) {
+                    Toast.makeText(Shop.this, "No Items To Download.", Toast.LENGTH_LONG).show();
+                } else {
+                    try {
+                        JSONObject json = new JSONObject(s);
+
+                        /* Loop through objects in the shoppingList.json folder. */
+                        Iterator<?> keys = json.keys();
+                        while (keys.hasNext()) {
+                            String key = (String) keys.next();
+                            JSONObject obj = json.getJSONObject(key);
+
+                            /* Getting data from current object, if not hidden. */
+                            String hidden = obj.getString("hidden");
+
+                            /* Getting data from current object, if not already completed. */
+                            if (hidden.equals("0")) {
+                                String item = obj.getString("itemName");
+                                String forWho = obj.getString("forWho");
+
+                                addItem(item, forWho, true);
+                            }
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+                pd.dismiss();
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                System.out.println("" + volleyError);
+                pd.dismiss();
+            }
+        });
+
+        RequestQueue rQueue = Volley.newRequestQueue(Shop.this);
+        rQueue.add(request);
+    }
+
+    private void addItem(final String itemName, final String forWho, boolean download) {
 
         final TextView textItem = new TextView(Shop.this);
         final Button removeButton = new Button(Shop.this);
 
-        textItem.setText(itemName);
+        String full = itemName;
+        if (forWho.equals("common")) {
+            full = full + "\n" + Utility.languageSwitch("For Everyone", "Felles");
+        } else {
+            full = full + "\n" + Utility.languageSwitch("Private", "Private");
+        }
+        textItem.setText(full);
         textItem.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
 
         LinearLayout.LayoutParams lp1 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -108,35 +176,40 @@ public class Shop extends AppCompatActivity {
         removeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                layoutShop.removeView(infoText);
+                layoutShop.removeView(textItem);
                 layoutShop.removeView(removeButton);
 
-                totalItems--;
-                showInfo(totalItems);
                 removeItem(itemName, forWho);
             }
         });
 
+        totalItems++;
+
         layoutShop.addView(textItem);
         layoutShop.addView(removeButton);
 
-        totalItems++;
-        showInfo(totalItems);
-
         scrollViewShop.fullScroll(View.FOCUS_DOWN);
 
-        /* Placing data in map before pushing to Firebase. */
-        Map<String, String> map = new HashMap<>();
-        map.put("itemName", itemName);
-        map.put("forWho", forWho);
-        map.put("hidden", "0");
+        if (!download) {
+            /* Placing data in map before pushing to Firebase. */
+            Map<String, String> map = new HashMap<>();
+            map.put("itemName", itemName);
+            map.put("forWho", forWho);
+            map.put("hidden", "0");
 
-        String key = formatKey(itemName, forWho);
-        reference = new Firebase("https://projectchat-bf300.firebaseio.com/rooms/" + UserDetails.roomId + "/shoppingList");
-        reference.child(key).setValue(map);
+            String key = formatKey(itemName, forWho);
+            reference = new Firebase("https://projectchat-bf300.firebaseio.com/rooms/" + UserDetails.roomId + "/shoppingList");
+            reference.child(key).setValue(map);
+        }
+        showInfo();
+    }
 
-        UserDetails.item = 1;
-        updateUI();
+    private void showInfo() {
+        if (totalItems == 0) {
+            infoText.setVisibility(View.VISIBLE);
+        } else {
+            infoText.setVisibility(View.GONE);
+        }
     }
 
     /* Format strings for custom Firebase key ID. */
@@ -146,39 +219,12 @@ public class Shop extends AppCompatActivity {
         return (UserDetails.showName + "_" + t + "_" + tt);
     }
 
-    private void updateUI() {
-        switch (UserDetails.item) {
-            case 1:
-                infoText.setVisibility(View.GONE);
-                newItem.hide();
-                removeItem.show();
-                break;
-            case 0:
-                setLanguage(UserDetails.language);
-                infoText.setVisibility(View.VISIBLE);
-                newItem.show();
-                removeItem.hide();
-                break;
-            default:
-                break;
-        }
-    }
-
-
-    private void showInfo(int n) {
-        if (n > 0) {
-            infoText.setVisibility(View.GONE);
-        } else {
-            infoText.setVisibility(View.VISIBLE);
-        }
-    }
-
     /* Accessing database to remove stored item. */
     private void removeItem(String itemName, String forWho) {
         String key = formatKey(itemName, forWho);
         reference = new Firebase("https://projectchat-bf300.firebaseio.com/rooms/" + UserDetails.roomId + "/shoppingList");
         reference.child(key).child("hidden").setValue("1");
+
+        totalItems--;
     }
-
-
 }

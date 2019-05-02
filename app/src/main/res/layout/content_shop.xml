@@ -32,7 +32,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
                 android:orientation="vertical"
-                android:paddingTop="@dimen/text_margin" />
+                android:paddingTop="@dimen/text_margin"
+                android:paddingLeft="@dimen/text_margin"/>
         </RelativeLayout>
     </ScrollView>
 

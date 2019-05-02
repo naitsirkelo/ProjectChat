@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
@@ -63,7 +64,7 @@ public class MainActivity extends AppCompatActivity
     DrawerLayout drawer;
     Toolbar toolbar;
     Menu menu;
-    Button refreshButton, boredButton;
+    Button boredButton;
     ImageButton eventBox;
     int totalTasks, boxPaddingTop = 25, boxPaddingBot = 5;
 
@@ -136,6 +137,7 @@ public class MainActivity extends AppCompatActivity
 
         /* Bored button */
         boredButton = headerView.findViewById(R.id.btn_bored);
+        boredButton.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
         boredButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -358,7 +360,7 @@ public class MainActivity extends AppCompatActivity
         SharedPreferences pref = this.getSharedPreferences("Login", MODE_PRIVATE);
         String previouslyEncodedImage = pref.getString("imageData", "");
 
-        if(!previouslyEncodedImage.equals("") ){
+        if (!previouslyEncodedImage.equals("")) {
             byte[] b = Base64.decode(previouslyEncodedImage, Base64.DEFAULT);
             Bitmap bitmap = BitmapFactory.decodeByteArray(b, 0, b.length);
 
@@ -557,6 +559,8 @@ public class MainActivity extends AppCompatActivity
 
         infoTextMain.setText(Utility.languageSwitch(getString(R.string.content_main_info), getString(R.string.content_main_info_1)));
         boredButton.setText(Utility.languageSwitch(getString(R.string.btn_bored_eng), getString(R.string.btn_bored_nor)));
+        boredButton.setTextColor(getResources().getColor(R.color.text_black));
+        boredButton.setTextSize(10);
     }
 
     private void drawerLanguage(String lang, MenuItem item, String eng, String nor) {
@@ -572,10 +576,12 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    public void amBored() {  //When bored button is pressed
-        Toast.makeText(MainActivity.this, "Du kjeder deg som fan", Toast.LENGTH_LONG).show();
-       // MyFirebaseMessagingService notification = new MyFirebaseMessagingService();
-        //notification.sendNotification("sup?", "dette er bare en test egt", this);
+    /* When bored button is pressed. */
+    public void amBored() {
+        /*
+        Future update: Notify other users with a popup/sound/animation that another user needs something to do.
+         */
+        Toast.makeText(MainActivity.this, Utility.languageSwitch("You're really bored.", "Du kjeder deg sykt."), Toast.LENGTH_LONG).show();
     }
 }
 
